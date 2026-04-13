@@ -46,7 +46,7 @@ class BaseAgent(ABC):
 
     # ── LLM 호출 헬퍼 ─────────────────────────────────────────────
 
-    def _call_llm(self, user_message: str, max_tokens: int = 2048) -> str:
+    def _call_llm(self, user_message: str, max_tokens: int = 4096) -> str:
         """LLMProvider를 통해 LLM 호출."""
         return self.llm.complete(
             system=self.system_prompt,

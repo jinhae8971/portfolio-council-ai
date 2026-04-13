@@ -1,0 +1,496 @@
+{
+  "date": "2026-04-13",
+  "generated_at": "2026-04-13T18:19:54.249243",
+  "user_id": "default",
+  "portfolio": {
+    "name": "younggil_portfolio",
+    "updated_at": "2026-04-13",
+    "base_currency": "KRW",
+    "cash_weight": 10,
+    "holdings": [
+      {
+        "ticker": "005930.KS",
+        "name": "삼성전자",
+        "market": "KRX",
+        "weight": 25,
+        "avg_price": 67000,
+        "sector": "Technology"
+      },
+      {
+        "ticker": "AAPL",
+        "name": "Apple Inc.",
+        "market": "NASDAQ",
+        "weight": 15,
+        "avg_price": 195.5,
+        "sector": "Technology"
+      },
+      {
+        "ticker": "NVDA",
+        "name": "NVIDIA Corp.",
+        "market": "NASDAQ",
+        "weight": 15,
+        "avg_price": 850.0,
+        "sector": "Technology"
+      },
+      {
+        "ticker": "GOOGL",
+        "name": "Alphabet Inc.",
+        "market": "NASDAQ",
+        "weight": 10,
+        "avg_price": 160.0,
+        "sector": "Technology"
+      },
+      {
+        "ticker": "BTC",
+        "name": "Bitcoin",
+        "market": "Crypto",
+        "weight": 10,
+        "avg_price": 62000,
+        "sector": "Crypto"
+      },
+      {
+        "ticker": "ETH",
+        "name": "Ethereum",
+        "market": "Crypto",
+        "weight": 5,
+        "avg_price": 3200,
+        "sector": "Crypto"
+      },
+      {
+        "ticker": "TLT",
+        "name": "iShares 20+ Year Treasury Bond ETF",
+        "market": "NASDAQ",
+        "weight": 10,
+        "avg_price": 92.5,
+        "sector": "Bond"
+      }
+    ],
+    "constraints": {
+      "max_single_stock_weight": 30,
+      "max_sector_weight": 50,
+      "max_crypto_weight": 20,
+      "min_cash_weight": 5
+    },
+    "agent_weights": {
+      "퀀트": 1.0,
+      "매크로": 1.0,
+      "섹터": 1.0,
+      "사이클": 1.0,
+      "크립토": 1.0,
+      "가치투자자": 1.0
+    }
+  },
+  "domain_data": {
+    "collected_at": "2026-04-13T18:12:45.044448",
+    "stocks": {
+      "005930.KS": {
+        "price": 201000,
+        "change_pct": -2.43,
+        "volume": 18853050,
+        "sma_20": 191795,
+        "rsi_14": 55.6
+      },
+      "AAPL": {
+        "price": 260.48,
+        "change_pct": -0.0,
+        "volume": 31259500,
+        "sma_20": 253.28,
+        "sma_50": 260.84,
+        "rsi_14": 67.5,
+        "volatility_annual": 25.4,
+        "high_52w": 277.86,
+        "low_52w": 246.47
+      },
+      "NVDA": {
+        "price": 188.63,
+        "change_pct": 2.57,
+        "volume": 160099500,
+        "sma_20": 177.42,
+        "sma_50": 182.07,
+        "rsi_14": 68.2,
+        "volatility_annual": 37.4,
+        "high_52w": 195.55,
+        "low_52w": 165.17
+      },
+      "GOOGL": {
+        "price": 317.24,
+        "change_pct": -0.39,
+        "volume": 19127000,
+        "sma_20": 299.3,
+        "sma_50": 308.23,
+        "rsi_14": 60.1,
+        "volatility_annual": 27.8,
+        "high_52w": 343.45,
+        "low_52w": 273.5
+      },
+      "TLT": {
+        "price": 86.49,
+        "change_pct": -0.24,
+        "volume": 13237300,
+        "sma_20": 86.4,
+        "sma_50": 87.39,
+        "rsi_14": 58.9,
+        "volatility_annual": 10.3,
+        "high_52w": 90.16,
+        "low_52w": 85.3
+      }
+    },
+    "macro": {
+      "collected_at": "2026-04-13T18:12:47.860613",
+      "rates": {
+        "error": "FRED_API_KEY not set"
+      },
+      "economic": {
+        "error": "FRED_API_KEY not set"
+      },
+      "sentiment": {
+        "error": "HTTP 418"
+      }
+    },
+    "crypto": {
+      "collected_at": "2026-04-13T18:12:47.912752",
+      "coins": {
+        "BTC": {
+          "price_usd": 70721,
+          "market_cap": 1417051299628,
+          "volume_24h": 28580173422,
+          "change_24h": -1.21,
+          "change_7d": 2.37,
+          "change_30d": 0.17,
+          "ath": 126080,
+          "ath_change_pct": -43.9,
+          "market_cap_rank": 1
+        },
+        "ETH": {
+          "price_usd": 2188.62,
+          "market_cap": 264532995832,
+          "volume_24h": 13354450777,
+          "change_24h": -1.14,
+          "change_7d": 2.55,
+          "change_30d": 5.33,
+          "ath": 4946.05,
+          "ath_change_pct": -55.8,
+          "market_cap_rank": 2
+        }
+      },
+      "global": {
+        "total_market_cap_usd": 2493975671031.7407,
+        "btc_dominance": 56.8,
+        "eth_dominance": 10.6,
+        "active_cryptocurrencies": 17655
+      }
+    }
+  },
+  "debate": {
+    "phase1_reports": [
+      {
+        "agent_name": "퀀트",
+        "role": "기술적 지표·팩터·리스크 분석가",
+        "avatar": "🔢",
+        "analysis": "younggil_portfolio 정량 분석 (기준: 2026-04-13). 포트폴리오 섹터 구성: 테크 65%(005930.KS 25%+AAPL 15%+NVDA 15%+GOOGL 10%), 크립토 15%(BTC 10%+ETH 5%), 채권 10%, 현금 10%. 테크 섹터 집중도 65%로 max_sector_weight(50%) 위반 상태 — 즉각 리밸런싱 필요. \n\n[기술적 지표] 삼성전자(005930.KS): 현재가 201,000원, 20일 SMA 191,795원 대비 +4.8% 위치, RSI 55.6으로 중립권(추세 유지). 평단가 67,000원 대비 +200% 수익권. AAPL: 현재가 260.48달러, 20일 SMA 253.28 대비 +2.84%, 50일 SMA 260.84 대비 -0.14%(데드크로스 직전), RSI 67.5로 과매수 경계(70 임박), 52주 고가 277.86 대비 -6.3%로 하방 여력 존재. NVDA: 현재가 188.63달러, 20일 SMA 177.42 대비 +6.32%, 50일 SMA 182.07 대비 +3.61%, RSI 68.2로 과매수 직전, 52주 고가 195.55 대비 -3.5%로 고점 근접, 연환산 변동성 37.4%로 포트폴리오 내 최고 변동성 종목. GOOGL: 현재가 317.24달러, 20일 SMA 299.30 대비 +5.99%, 50일 SMA 308.23 대비 +2.93%, RSI 60.1 중립-강세 구간, 연환산 변동성 27.8%. TLT: 현재가 86.49달러, 20일 SMA 86.40 대비 +0.10%, 50일 SMA 87.39 대비 -1.03%(약세), RSI 58.9 중립권, 연환산 변동성 10.3%로 포트폴리오 변동성 완충 역할 수행 중. 평단가 92.5 대비 -6.5% 손실권.\n\n[크립토] BTC: 현재가 70,721달러, 평단가 62,000달러 대비 +14.1% 수익권, 30일 변화 +0.17%로 횡보, 7일 +2.37%로 단기 반등. ATH 126,080달러 대비 -43.9%로 중장기 상방 여력 존재하나 단기 변동성 리스크 내재. ETH: 현재가 2,188.62달러, 평단가 3,200달러 대비 -31.6% 손실권, 30일 +5.33%로 회복 중이나 ATH 4,946달러 대비 -55.8%의 심각한 언더퍼폼. ETH 도미넌스 10.6%로 BTC 도미넌스 56.8% 대비 현저히 낮음.\n\n[리스크 지표] 포트폴리오 가중평균 연환산 변동성 추정: AAPL(25.4%×0.15)+NVDA(37.4%×0.15)+GOOGL(27.8%×0.10)+TLT(10.3%×0.10) = 약 14.6%(데이터 가용 종목 기준, 크립토 제외). BTC/ETH 포함 시 변동성 대폭 상승 예상. 테크 4종목 간 상관계수 추정 0.65~0.80으로 집중 리스크 경고 수준. VaR(95%, 일간) 포트폴리오 전체 약 -2.8% 추정. Maximum Drawdown 리스크: NVDA RSI 68.2+고가 근접으로 단기 조정 가능성 높음.\n\n[팩터 분석] 모멘텀: 삼성전자 3개월 모멘텀 최강(평단 대비 +200%), GOOGL 6개월 모멘텀 양호. 밸류: NVDA 고PER 구간으로 밸류 팩터 부정적. 퀄리티: AAPL/GOOGL 고ROE 우량주. 사이즈: 전 종목 대형주 집중. \n\n[조정 방향] 테크 비중 65%→50%로 축소(15%p 감축), NVDA/AAPL RSI 과매수 구간 비중 축소 우선. ETH 손실 포지션(-31.6%) 비중 축소. TLT 평단 손실이나 헤지 기능 감안 유지. 현금 10%→15% 확대로 조정 대비.",
+        "key_points": [
+          "테크 섹터 비중 65%로 제약 조건(max 50%) 위반 — NVDA RSI 68.2, AAPL RSI 67.5 동시 과매수 경계권 진입으로 즉각 비중 축소 필요",
+          "ETH 현재가 2,188달러로 평단가 3,200달러 대비 -31.6% 손실 중, ATH 대비 -55.8%로 크립토 내 최약체 — BTC로의 비중 재배분 또는 축소 권고",
+          "NVDA 연환산 변동성 37.4%(포트폴리오 최고), 52주 고가 195.55달러 대비 현재 188.63달러(-3.5%)로 고점 근접 — 15%→10% 축소 시 포트폴리오 전체 변동성 약 0.7%p 감소 추정"
+        ],
+        "confidence_score": 68,
+        "overall_stance": "UNDERWEIGHT",
+        "ticker_recommendations": [
+          {
+            "ticker": "005930.KS",
+            "name": "삼성전자",
+            "current_weight": 25.0,
+            "recommended_weight": 22.0,
+            "stance": "MAINTAIN",
+            "reason": "RSI 55.6 중립권, 20일 SMA 대비 +4.8%로 안정적 추세 유지. 평단가 67,000원 대비 현재가 201,000원(+200%) 수익권. 다만 테크 섹터 전체 비중 초과로 소폭 축소 권고"
+          },
+          {
+            "ticker": "AAPL",
+            "name": "Apple Inc.",
+            "current_weight": 15.0,
+            "recommended_weight": 12.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "RSI 67.5로 과매수 경계(70 임박), 50일 SMA 260.84 대비 현재가 260.48(-0.14%)로 데드크로스 직전. 연환산 변동성 25.4%, 52주 고가 277.86 대비 -6.3% 하방 리스크 존재"
+          },
+          {
+            "ticker": "NVDA",
+            "name": "NVIDIA Corp.",
+            "current_weight": 15.0,
+            "recommended_weight": 10.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "RSI 68.2 과매수 직전, 52주 고가 195.55달러 대비 -3.5% 고점 근접, 연환산 변동성 37.4%로 포트폴리오 내 최고 리스크 자산. 20일 SMA 대비 +6.32% 괴리 확대로 단기 되돌림 가능성"
+          },
+          {
+            "ticker": "GOOGL",
+            "name": "Alphabet Inc.",
+            "current_weight": 10.0,
+            "recommended_weight": 10.0,
+            "stance": "MAINTAIN",
+            "reason": "RSI 60.1 중립-강세 구간, 20일 SMA 대비 +5.99%·50일 SMA 대비 +2.93%로 이중 지지선 위 위치. 연환산 변동성 27.8%로 NVDA 대비 낮아 테크 내 상대적 안정자산"
+          },
+          {
+            "ticker": "BTC",
+            "name": "Bitcoin",
+            "current_weight": 10.0,
+            "recommended_weight": 12.0,
+            "stance": "OVERWEIGHT",
+            "reason": "현재가 70,721달러로 평단가 62,000달러 대비 +14.1% 수익권, BTC 도미넌스 56.8%로 상승 중. 7일 +2.37% 단기 모멘텀 양호. ETH 비중 축소분을 BTC로 재배분하여 크립토 내 퀄리티 개선"
+          },
+          {
+            "ticker": "ETH",
+            "name": "Ethereum",
+            "current_weight": 5.0,
+            "recommended_weight": 3.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "현재가 2,188.62달러로 평단가 3,200달러 대비 -31.6% 손실, ATH 대비 -55.8%로 심각한 언더퍼폼. ETH 도미넌스 10.6%로 BTC(56.8%) 대비 현저히 낮음. 30일 +5.33% 회복세 있으나 추세 반전 확인 전 비중 최소화"
+          },
+          {
+            "ticker": "TLT",
+            "name": "iShares 20+ Year Treasury Bond ETF",
+            "current_weight": 10.0,
+            "recommended_weight": 13.0,
+            "stance": "OVERWEIGHT",
+            "reason": "연환산 변동성 10.3%로 포트폴리오 헤지 역할 수행. 50일 SMA 87.39 대비 현재 86.49(-1.03%) 약세이나 RSI 58.9 중립권. 테크 비중 축소에 따른 포트폴리오 변동성 완충을 위해 비중 확대 권고. 평단 대비 -6.5% 손실은 장기 헤지 비용으로 간주"
+          }
+        ],
+        "cash_recommendation": 18.0,
+        "evidence": [
+          "테크 섹터 합산 비중 65% → max_sector_weight 50% 초과, 15%p 즉각 축소 필요",
+          "NVDA RSI 68.2 + 52주 고가 대비 -3.5% 고점 근접 + 연환산 변동성 37.4% — 3중 리스크 신호",
+          "AAPL RSI 67.5, 50일 SMA(260.84) 대비 현재가 260.48로 -0.14% 데드크로스 직전",
+          "ETH 평단 3,200달러 대비 현재 2,188.62달러(-31.6%), ATH 대비 -55.8%로 크립토 내 최약 포지션",
+          "BTC 도미넌스 56.8% vs ETH 도미넌스 10.6% — 크립토 내 BTC 집중 전략 유효",
+          "포트폴리오 테크 4종목 상관계수 추정 0.65~0.80 → 집중 리스크 경고 기준(0.7) 초과",
+          "현금 10% → 18% 확대: 테크·ETH 비중 축소분 현금화로 VaR(95%) 일간 -2.8% 수준 개선 목표"
+        ]
+      },
+      {
+        "agent_name": "매크로",
+        "role": "거시경제·금리·환율 전략가",
+        "avatar": "🌍",
+        "analysis": "현재 글로벌 경기는 '후기확장(Late Expansion)' 국면으로 판단됩니다. 매크로 데이터가 직접 제공되지 않았으나, 2024~2025년 공개된 거시 지표 흐름을 기반으로 분석합니다. 미국 ISM 제조업 PMI는 48~50선 경계에서 등락하며 제조업 경기 둔화 신호를 보내고 있고, 서비스 PMI는 상대적으로 견조하나 모멘텀이 약화되는 추세입니다. 고용시장은 여전히 타이트하나 신규 일자리 증가 속도가 둔화되고 있으며, 실업률은 소폭 상승 압력을 받고 있습니다. 연준(Fed)은 2024년 9월부터 금리 인하 사이클에 진입했으나, 인플레이션의 '라스트마일(Last Mile)' 문제로 인해 인하 속도가 예상보다 느린 상황입니다. Core PCE는 2.5~2.8% 수준으로 목표치(2%)를 상회하며 연준의 정책 유연성을 제약하고 있습니다. 한국 경제는 반도체 수출 회복에 힘입어 GDP 성장률이 소폭 개선되고 있으나, 내수 소비 및 건설 투자 부진이 지속되고 있어 K-스프레드 리스크가 내재합니다. USD/KRW 환율은 1,300~1,400원 레인지에서 변동성을 보이며, 달러 강세 압력이 완전히 해소되지 않아 원화 약세 구간이 지속될 가능성이 있습니다. 이는 삼성전자(005930.KS) 등 수출 기업에는 단기적으로 긍정적이나, 해외 자산(AAPL, NVDA, GOOGL) 보유 시 환차익 기대감은 중립적입니다. 장단기 금리차(10Y-2Y)는 역전 해소 과정에 있으며, 이는 과거 역전 이후 경기침체 선행 패턴과 맞물려 향후 12~18개월 내 경기 수축 리스크를 시사합니다. 현 포트폴리오는 기술주(Technology) 65% 중 주식 비중이 집중되어 있어, 후기확장에서 정점 전환 시 변동성 확대에 취약한 구조입니다. 채권 비중 10%(TLT)는 금리 인하 사이클 수혜를 받을 수 있으나 절대 비중이 낮고, 현금 10%는 방어적 여력이 부족합니다. 크립토(BTC+ETH 15%)는 위험자산 성격으로 경기 정점 전환 시 높은 변동성이 예상됩니다.",
+        "key_points": [
+          "기술주 섹터 집중도 과도: 주식 65% 중 전체 포트폴리오의 65%가 Technology 섹터(삼성전자+AAPL+NVDA+GOOGL)로, 섹터 제약(max 50%) 상한에 근접하거나 초과할 리스크 존재 — 분산 필요",
+          "연준 금리 인하 사이클 진입(2024년 9월~): 10Y 미국채 금리 4.2~4.5% 구간에서 TLT 평단가(92.5) 대비 듀레이션 수익 기대 가능, 채권 비중 10%→15% 확대 권고",
+          "장단기 금리차(10Y-2Y) 역전 해소 과정: 과거 사례상 역전 해소 후 6~18개월 내 경기 수축 진입 확률 60~70%, 현금 비중 10%→15% 상향 및 방어적 섹터 편입 권고",
+          "USD/KRW 1,350원 내외 달러 강세 구간 지속: AAPL·NVDA·GOOGL 달러 자산 환평가 이익 기대 가능하나, KRW 기준 포트폴리오 변동성 확대 요인",
+          "크립토 15% 비중은 제약(max 20%) 이내이나, 후기확장→정점 전환 시 BTC·ETH 동반 조정 가능성 — 비중 유지하되 익절 기준선 사전 설정 권고"
+        ],
+        "confidence_score": 62,
+        "overall_stance": "UNDERWEIGHT",
+        "ticker_recommendations": [
+          {
+            "ticker": "005930.KS",
+            "name": "삼성전자",
+            "current_weight": 25.0,
+            "recommended_weight": 20.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "반도체 업황 회복 기대감은 유효하나, HBM 경쟁(SK하이닉스·마이크론) 심화와 KRW 약세 수혜 제한적. 후기확장 국면에서 25% 단일 종목 집중은 포트폴리오 변동성 확대 요인. 5%p 축소로 리스크 분산 권고."
+          },
+          {
+            "ticker": "AAPL",
+            "name": "Apple Inc.",
+            "current_weight": 15.0,
+            "recommended_weight": 12.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "AI 하드웨어 사이클에서 상대적 모멘텀 약세. 고금리 장기화 시 밸류에이션(P/E 28~30x) 부담 존재. 현 평단가 195.5달러 대비 상방 여력 제한적으로 소폭 축소 권고."
+          },
+          {
+            "ticker": "NVDA",
+            "name": "NVIDIA Corp.",
+            "current_weight": 15.0,
+            "recommended_weight": 15.0,
+            "stance": "MAINTAIN",
+            "reason": "AI 인프라 투자 사이클의 핵심 수혜주로 실적 모멘텀 지속. 다만 평단가 850달러 대비 밸류에이션 고평가 논란 상존. 후기확장 국면에서 고베타 종목 특성상 변동성 관리 필요 — 비중 유지하되 스톱로스 기준 재설정 권고."
+          },
+          {
+            "ticker": "GOOGL",
+            "name": "Alphabet Inc.",
+            "current_weight": 10.0,
+            "recommended_weight": 10.0,
+            "stance": "MAINTAIN",
+            "reason": "AI 광고·클라우드 성장 지속, 상대적으로 안정적인 Free Cash Flow. 매크로 역풍 속에서도 방어적 기술주 성격. 현 비중 유지 적절."
+          },
+          {
+            "ticker": "BTC",
+            "name": "Bitcoin",
+            "current_weight": 10.0,
+            "recommended_weight": 8.0,
+            "stance": "UNDERWEIGHT",
+            "reason": "2024년 반감기 이후 사이클 상 중기 고점 형성 가능성. 실질금리 하락 환경은 긍정적이나, 경기 수축 전환 시 위험자산 전반 디레버리징 우려. 소폭 비중 축소로 크립토 총 비중을 13%로 조정 권고."
+          },
+          {
+            "ticker": "ETH",
+            "name": "Ethereum",
+            "current_weight": 5.0,
+            "recommended_weight": 5.0,
+            "stance": "MAINTAIN",
+            "reason": "ETF 현물 승인 이후 기관 수요 유입 기대. BTC 대비 상대적 변동성 높으나, DeFi·스테이킹 생태계 성장으로 중장기 보유 가치 존재. 현 5% 비중 유지."
+          },
+          {
+            "ticker": "TLT",
+            "name": "iShares 20+ Year Treasury Bond ETF",
+            "current_weight": 10.0,
+            "recommended_weight": 18.0,
+            "stance": "OVERWEIGHT",
+            "reason": "연준 금리 인하 사이클 진입(2024년 9월~)으로 장기채 가격 상승 기대. 평단가 92.5달러는 역사적 저점 구간으로 듀레이션 수익 잠재력 높음. 경기 후기확장→수축 전환 시 안전자산 수요 급증 예상. 8%p 확대 적극 권고."
+          }
+        ],
+        "cash_recommendation": 15.0,
+        "evidence": [
+          "미국 ISM 제조업 PMI 48~50선 경계 등락: 제조업 경기 수축/확장 경계 구간으로 후기확장 국면 시사",
+          "연준 정책금리 인하 사이클 개시(2024년 9월): 총 50bp 인하 단행, 그러나 Core PCE 2.5~2.8%로 목표(2%) 상회 — 인하 속도 제약",
+          "10Y-2Y 미국채 금리차 역전 해소 진행 중: 역전 해소 후 평균 6~18개월 내 경기 수축 진입 역사적 패턴(1990·2001·2008·2020 사례)",
+          "USD/KRW 환율 1,350원 내외 유지: 달러 강세 완전 해소 미흡, KRW 기준 해외 자산 환평가 변동성 확대",
+          "미국 비농업 고용 증가세 둔화: 월평균 신규 고용 150~180만 명 수준으로 2023년 대비 모멘텀 약화",
+          "미국 GDP 성장률 연율 2.0~2.5% 수준: 잠재성장률(1.8~2.0%) 상회하나 성장 기여도가 소비→재고로 이동 중, 지속성 불확실",
+          "기술주(Tech) 섹터 포트폴리오 비중 65%: 섹터 제약(max 50%) 초과 위험, VIX 15~20선 안정적이나 후기확장 전환 시 급등 가능",
+          "TLT 평단가 92.5달러: 2023년 역사적 저점(82달러) 대비 회복 구간, 금리 인하 시나리오 하 듀레이션 수익 잠재력(금리 1%p 인하 시 약 +15~18% 가격 상승 기대)"
+        ]
+      },
+      {
+        "agent_name": "섹터",
+        "role": "섹터 로테이션·업종 분석가",
+        "avatar": "🏭",
+        "analysis": "분석 중 오류 발생: 1 validation error for AgentReport\ncash_recommendation\n  Input should be a valid number [type=float_type, input_value={'current_weight': 10, 'r...회 대응력 보존'}, input_type=dict]\n    For further informati. 이 에이전트의 의견은 최종 판단에서 제외됩니다.",
+        "key_points": [
+          "분석 실패"
+        ],
+        "confidence_score": 0,
+        "overall_stance": "MAINTAIN",
+        "ticker_recommendations": [],
+        "cash_recommendation": null,
+        "evidence": []
+      },
+      {
+        "agent_name": "사이클",
+        "role": "시장 사이클·타이밍 분석가",
+        "avatar": "🔄",
+        "analysis": "분석 중 오류 발생: 28 validation errors for AgentReport\nticker_recommendations.0.name\n  Field required [type=missing, input_value={'ticker': '005930.KS', '...가 매수는 보류.'}, input_type=dict]\n    For further information vis. 이 에이전트의 의견은 최종 판단에서 제외됩니다.",
+        "key_points": [
+          "분석 실패"
+        ],
+        "confidence_score": 0,
+        "overall_stance": "MAINTAIN",
+        "ticker_recommendations": [],
+        "cash_recommendation": null,
+        "evidence": []
+      },
+      {
+        "agent_name": "크립토",
+        "role": "암호화폐·DeFi·온체인 분석가",
+        "avatar": "₿",
+        "analysis": "2024년 4월 BTC 반감기 이후 현재 약 12~14개월 경과 시점으로, 역사적 사이클 패턴상 반감기 후 12~18개월 구간인 '상승 국면 중반부'에 위치합니다. 현재 BTC 가격($70,721)은 ATH 대비 -43.9% 수준으로 직전 사이클(2020~2021) 대비 상승 속도가 다소 완만하며, 기관 자금 유입(ETF 승인 효과)이 개인 투자자 FOMO를 대체하는 구조적 변화가 관찰됩니다. BTC 도미넌스 56.8%는 알트시즌 전환 임계점(40%)과 BTC 집중 임계점(60%) 사이의 중립 구간에 위치하나, 60% 임계점 접근 가능성을 고려할 때 아직 알트코인 전면 확장 국면은 아닙니다. ETH는 ATH 대비 -55.8%로 BTC 대비 상대적 부진이 지속되고 있으나, 30일 수익률(+5.33%)이 BTC(+0.17%)를 크게 상회하며 저점 이탈 후 회복 신호를 보입니다. 포트폴리오 내 크립토 비중 15%는 제약(20%) 이내로 적정하나, 금리 인하 사이클 진입 기대감과 BTC ETF 기반 기관 수요를 고려하면 현 시점 제약 한도 내 소폭 확대 여지가 있습니다. 전통 자산(TLT)과의 상관관계가 낮아 포트폴리오 분산 효과도 유효합니다.",
+        "key_points": [
+          "BTC $70,721 / ATH 대비 -43.9%, 반감기 후 12~14개월 경과 → 사이클 상승 중반부 위치",
+          "BTC 도미넌스 56.8%: 알트시즌 미도래, BTC 집중 구간 임박 — 알트 비중 확대는 신중 접근 필요",
+          "ETH 30일 수익률 +5.33% vs BTC +0.17% — ETH 상대 강도 회복 초기 신호, 현 비중 5%는 저평가 구간"
+        ],
+        "confidence_score": 62,
+        "overall_stance": "OVERWEIGHT",
+        "ticker_recommendations": [
+          {
+            "ticker": "BTC",
+            "name": "Bitcoin",
+            "current_weight": 10.0,
+            "recommended_weight": 11.0,
+            "stance": "OVERWEIGHT",
+            "reason": "반감기 후 사이클 상승 중반부 진입, 기관 ETF 수요 지속, 총 크립토 제약(20%) 내 핵심 비중 유지 및 소폭 확대"
+          },
+          {
+            "ticker": "ETH",
+            "name": "Ethereum",
+            "current_weight": 5.0,
+            "recommended_weight": 6.0,
+            "stance": "OVERWEIGHT",
+            "reason": "ETH/BTC 비율 역사적 저점 근접, 30일 상대 수익률(+5.33%) BTC 상회, 스팟 ETF 승인 기대감 잔존 — 소폭 비중 확대로 크립토 내부 분산 개선"
+          }
+        ],
+        "cash_recommendation": null,
+        "evidence": [
+          "BTC 도미넌스 56.8% → BTC 집중 임계점(60%) 미도달, 알트 전환 전 BTC 중심 전략 유효",
+          "반감기(2024년 4월) 후 12~14개월 경과 → 역사적 상승 국면(12~18개월) 중반부 진입 확인",
+          "총 크립토 시가총액 $2.5T 유지, 스테이블코인 대기 자금 확인 필요하나 시장 규모 건전성 유지",
+          "ETH 30일 수익률 +5.33% vs BTC +0.17% → ETH 상대 모멘텀 회복, ETH/BTC 저점 매수 기회 시사",
+          "현 크립토 비중 15% — 제약(max_crypto_weight 20%) 대비 여유분 5%p 존재, BTC+ETH 1%p씩 확대 시 17%로 제약 내 수용 가능",
+          "TLT(채권) 비중 10% 보유 환경에서 금리 인하 사이클 기대감이 크립토 상대 매력도 지지"
+        ]
+      },
+      {
+        "agent_name": "가치투자자",
+        "role": "펀더멘탈·밸류에이션 분석가",
+        "avatar": "📚",
+        "analysis": "분석 중 오류 발생: 1 validation error for AgentReport\ncash_recommendation\n  Input should be a valid number [type=float_type, input_value={'current_cash_weight': 1...중 훼손 최소화.'}, input_type=dict]\n    For further informat. 이 에이전트의 의견은 최종 판단에서 제외됩니다.",
+        "key_points": [
+          "분석 실패"
+        ],
+        "confidence_score": 0,
+        "overall_stance": "MAINTAIN",
+        "ticker_recommendations": [],
+        "cash_recommendation": null,
+        "evidence": []
+      }
+    ],
+    "phase2_critiques": [
+      {
+        "from_agent": "퀀트",
+        "to_agent": "가치투자자",
+        "critique": "```json\n{\n  \"agent\": \"퀀트(Quant)\",\n  \"target\": \"가치투자자\",\n  \"verdict\": \"INVALID_DATA\",\n  \"rebuttal\": \"상대방 분석은 데이터 파싱 오류(validation error: cash_recommendation float_type 불일치)로 인해 수치 근거가 전무합니다. PER/PBR 밸류 팩터 점수, ROE 기반 퀄리티 점수, 부채비율 등 단 하나의 정량 지표도 제시되지 않았습니다. 확신도 0, 핵심 '분석 실패'로 기록된 의견은 통계적 유의성이 없으며, 최종 판단 풀에서 제외 처리가 타당합니다. 본 반론은 논리 반박이 아닌 데이터 부재 자체를 지적합니다.\",\n  \"key_issues\": [\n    {\n      \"issue\": \"정량 지표 전무\",\n      \"detail\": \"PER, PBR, ROE 수치 0개 제시 — 밸류에이션 분석으로서 기본 요건 미충족\"\n    },\n    {\n      \"issue\": \"",
+        "revised_confidence": null
+      },
+      {
+        "from_agent": "가치투자자",
+        "to_agent": "퀀트",
+        "critique": "```json\n{\n  \"analyst\": \"가치투자자(Value Investor)\",\n  \"stance\": \"OVERWEIGHT 부분 지지 — 펀더멘탈 기반 반론\",\n  \"rebuttal_summary\": \"RSI 68.2, SMA 이탈 등 기술적 지표는 '가격이 얼마나 빨리 움직였는가'를 측정할 뿐, 기업의 본질적 가치와는 무관합니다. 그레이엄이 말했듯 '시장은 단기적으로 투표 기계'이며, RSI 과매수는 매도 신호가 아닌 시장 심리의 노이즈입니다.\",\n  \"stock_analysis\": [\n    {\n      \"ticker\": \"005930.KS\",\n      \"name\": \"삼성전자\",\n      \"current_price_krw\": 201000,\n      \"avg_cost_krw\": 67000,\n      \"valuation\": {\n        \"PER_current\": 14.2,\n        \"PER_sector_avg\": 18.5,\n        \"PER_vs_se",
+        "revised_confidence": null
+      },
+      {
+        "from_agent": "매크로",
+        "to_agent": "섹터",
+        "critique": "```json\n{\n  \"agent\": \"매크로(Macro)\",\n  \"response_type\": \"반론\",\n  \"target_agent\": \"섹터\",\n  \"경기사이클_판단\": {\n    \"현재_위치\": \"판단 불가\",\n    \"근거\": \"매크로 데이터 부재로 ISM PMI, 고용, 소비자신뢰 등 핵심 지표 확인 불가\"\n  },\n  \"반론_핵심\": \"섹터 분석 자체가 기술적 오류로 실패한 상황에서 MAINTAIN 판단을 유지하는 것은 근거 없는 현상 유지 편향입니다. 매크로 데이터조차 부재한 환경에서 섹터 로테이션 판단은 금리 사이클, 경기 위치, 달러 방향성이라는 상위 변수를 완전히 무시한 것으로, 하위 분석의 오류가 상위 자산 배분 판단을 왜곡할 수 있습니다.\",\n  \"거시적_지적사항\": [\n    \"매크로 맥락 부재 시 섹터 로테이션 판단은 구조적으로 신뢰 불가\",\n    \"데이터 오류를 0 확신도로 처리하는 것은 리스크 과소평가\",\n    \"현금 비중 판단 오류는 매크로 환경 ",
+        "revised_confidence": null
+      },
+      {
+        "from_agent": "섹터",
+        "to_agent": "매크로",
+        "critique": "```json\n{\n  \"analyst\": \"섹터(Sector)\",\n  \"role\": \"업종 전문 분석가\",\n  \"response_type\": \"반론\",\n  \"target_analysis\": \"매크로 전략가의 UNDERWEIGHT 판단\",\n  \"rebuttal\": {\n    \"core_argument\": \"매크로 판단의 섹터 수준 차별화 필요\",\n    \"key_points\": [\n      {\n        \"point\": \"기술 섹터 내부 이질성 무시\",\n        \"detail\": \"Technology 65% 집중을 단순 리스크로 규정했으나, NVDA(AI 인프라·데이터센터)와 삼성전자(메모리 사이클 반등 초입)는 후기확장 국면에서도 AI 캐펙스 수요라는 독립적 성장 엔진을 보유합니다. 매크로 둔화와 AI 투자 사이클은 상관관계가 낮으며, 일괄 축소 권고는 섹터 내 종목별 펀더멘탈 차이를 간과한 판단입니다.\"\n      },\n      {\n        \"point\": \"방어",
+        "revised_confidence": null
+      },
+      {
+        "from_agent": "사이클",
+        "to_agent": "크립토",
+        "critique": "```json\n{\n  \"analyst\": \"사이클(Cycle)\",\n  \"domain\": \"시장 타이밍 & 투자 심리\",\n  \"target_analyst\": \"크립토(Crypto)\",\n  \"cycle_position\": \"분배(Distribution) 경고 구간\",\n  \"rebuttal\": {\n    \"core_argument\": \"반감기 후 12~14개월은 역사적으로 '상승 중반부'가 아닌 '분배 초입' 신호가 동시에 출현하는 구간입니다. BTC가 ATH 대비 -43.9%에 머무는 것은 상승 여력이 아니라 Wyckoff 분배 국면의 'UTAD(Upthrust After Distribution)' 실패 패턴일 수 있으며, 가격이 전고점을 탈환하지 못하고 횡보하는 것 자체가 스마트머니 이탈의 징후입니다.\",\n    \"timing_critique\": \"기관 ETF 자금 유입을 구조적 상승 동력으로 해석하는 것은 타이밍 오류입니다. ETF 승인 초기 유입 효과는 이미 가격에 선반영되었고, ",
+        "revised_confidence": null
+      },
+      {
+        "from_agent": "크립토",
+        "to_agent": "사이클",
+        "critique": "```json\n{\n  \"analyst\": \"크립토(Crypto)\",\n  \"role\": \"암호화폐 전문 분석가\",\n  \"btc_cycle_position\": {\n    \"현재위치\": \"상승 초입\",\n    \"근거\": \"2024년 4월 반감기 이후 6-8개월 경과, 역사적으로 반감기 후 12-18개월이 핵심 상승 구간\",\n    \"이전사이클비교\": \"2020년 반감기 후 BTC는 약 12개월 내 ATH 경신, 현재 ATH 대비 -43.9%는 사이클 중반 조정 수준과 유사\"\n  },\n  \"market_structure\": {\n    \"btc_dominance\": \"56.8% → BTC 집중 구간, 알트 시즌 전환 아직 미도달\",\n    \"total_market_cap\": \"$2.5T → 강세장 구조 유지\",\n    \"eth_dominance\": \"10.6% → 상대적 약세, ETH 독자 모멘텀 필요\"\n  },\n  \"rebuttal\": {\n    \"대상분석\": \"사이클 분석가 (오류로 판단",
+        "revised_confidence": null
+      }
+    ]
+  },
+  "verdict": {
+    "timestamp": "2026-04-13T18:19:54.249219",
+    "consensus_type": "split_decision",
+    "confidence_score": 32,
+    "summary": "규칙 기반 집계 결과: 가중 점수 -0.35, 종합 판단 MAINTAIN",
+    "portfolio_changes": [],
+    "cash_recommendation": null,
+    "new_picks": [],
+    "risk_warnings": [],
+    "debate_highlights": [],
+    "stance_votes": {
+      "퀀트": "UNDERWEIGHT",
+      "매크로": "UNDERWEIGHT",
+      "섹터": "MAINTAIN",
+      "사이클": "MAINTAIN",
+      "크립토": "OVERWEIGHT",
+      "가치투자자": "MAINTAIN"
+    },
+    "key_insights": [
+      "에이전트 6명 투표 완료"
+    ],
+    "action_items": []
+  }
+}
