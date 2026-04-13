@@ -7,25 +7,25 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0b10;--card:#12141f;--card2:#1a1d2e;--border:#222640;--text:#e2e8f0;--muted:#7c8db5;--accent:#6366f1;--green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--cyan:#06b6d4}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+:root{--bg:#000;--card:#0a0a0a;--card2:#111;--border:#333;--text:#ccc;--muted:#666;--accent:#ff6600;--green:#00cc00;--yellow:#ffcc00;--orange:#ff6600;--red:#ff3333;--blue:#3399ff;--purple:#cc66ff;--cyan:#00cccc}
+body{font-family:Consolas,'Courier New',monospace;background:var(--bg);color:var(--text);line-height:1.5;font-size:13px}
 .container{max-width:1100px;margin:0 auto;padding:20px}
 
 /* Header */
 .header{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;gap:12px}
-.header h1{font-size:1.6rem;font-weight:800;letter-spacing:-0.02em}
-.header h1 span{background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header-links{display:flex;gap:12px;font-size:0.8rem}
-.header-links a{color:var(--blue);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
-.header-links a:hover{border-color:var(--blue)}
+.header h1{font-size:1.3rem;font-weight:700}
+.header h1 span{color:var(--accent)}
+.header-links{display:flex;gap:8px;font-size:11px}
+.header-links a{color:var(--accent);text-decoration:none;padding:3px 8px;border:1px solid var(--border)}
+.header-links a:hover{border-color:var(--accent)}
 
 /* Version badge */
-.version{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:white;padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:700}
+.version{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:white;padding:3px 10px;border-radius:0;font-size:0.7rem;font-weight:700}
 
 /* Stage tracker */
 .stages{display:flex;gap:0;margin-bottom:32px;overflow-x:auto}
 .stage{flex:1;min-width:180px;padding:16px;border:1px solid var(--border);position:relative}
-.stage:first-child{border-radius:10px 0 0 10px}
+.stage:first-child{border-radius:0 0 0 10px}
 .stage:last-child{border-radius:0 10px 10px 0}
 .stage.active{background:var(--card2);border-color:var(--accent)}
 .stage.completed{background:linear-gradient(135deg,#22c55e10,#22c55e05);border-color:#22c55e44}
@@ -38,7 +38,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 /* KPI row */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:0;padding:14px;text-align:center}
 .kpi-val{font-size:1.6rem;font-weight:800;margin:4px 0}
 .kpi-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
 
@@ -47,11 +47,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .section-hdr{font-size:1rem;font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
 /* Milestone table */
-.milestone{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.milestone{background:var(--card);border:1px solid var(--border);border-radius:0;margin-bottom:12px;overflow:hidden}
 .milestone-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer}
 .milestone-hdr:hover{background:var(--card2)}
 .milestone-name{font-weight:600;font-size:0.9rem}
-.milestone-badge{padding:2px 10px;border-radius:12px;font-size:0.7rem;font-weight:600}
+.milestone-badge{padding:2px 10px;border-radius:0;font-size:0.7rem;font-weight:600}
 .badge-done{background:#22c55e22;color:var(--green)}
 .badge-active{background:#6366f122;color:var(--accent)}
 .badge-pending{background:#7c8db522;color:var(--muted)}
@@ -67,14 +67,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 /* Layer breakdown */
 .layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.layer{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.layer{background:var(--card);border:1px solid var(--border);border-radius:0;padding:16px}
 .layer-name{font-weight:700;font-size:0.85rem;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .layer-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:6px 0}
 .layer-fill{height:100%;border-radius:4px}
 .layer-stat{font-size:0.75rem;color:var(--muted)}
 
 /* Next steps */
-.next-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px}
+.next-card{background:var(--card);border:1px solid var(--border);border-radius:0;padding:16px;margin-bottom:10px}
 .next-card:hover{border-color:var(--accent)}
 .next-priority{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px}
 .priority-high{color:var(--red)}
@@ -86,9 +86,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 /* Charts */
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:0;padding:16px}
 .chart-card h3{font-size:0.85rem;font-weight:600;margin-bottom:12px}
-@media(max-width:768px){.chart-row{grid-template-columns:1fr}.stages{flex-direction:column}.stage{border-radius:10px!important;margin-bottom:4px}}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}.stages{flex-direction:column}.stage{border-radius:0!important;margin-bottom:4px}}
 
 /* Timeline */
 .timeline{position:relative;padding-left:24px}

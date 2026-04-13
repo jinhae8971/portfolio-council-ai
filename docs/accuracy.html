@@ -3,133 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accuracy Tracker — Portfolio Council AI</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<title>ACCURACY | Portfolio Council AI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f1117;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
-.container{max-width:1000px;margin:0 auto;padding:16px}
-header{padding:20px 0;border-bottom:1px solid #2a2d3e;margin-bottom:24px}
-h1{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#22c55e,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.card{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:20px;margin-bottom:20px}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
-.kpi{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:16px;text-align:center}
-.kpi-value{font-size:2rem;font-weight:700;margin:4px 0}
-.kpi-label{font-size:0.75rem;color:#94a3b8;text-transform:uppercase}
-.agent-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #2a2d3e}
-.agent-row:last-child{border:none}
-.agent-name{width:100px;font-weight:600;font-size:0.9rem}
-.acc-bar{flex:1;height:24px;background:#2a2d3e;border-radius:6px;overflow:hidden;position:relative}
-.acc-fill{height:100%;border-radius:6px;transition:width 0.5s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.75rem;font-weight:600}
-.section-title{font-size:1rem;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #2a2d3e}
-table{width:100%;border-collapse:collapse;font-size:0.85rem}
-th{text-align:left;padding:8px;color:#94a3b8;border-bottom:1px solid #2a2d3e}
-td{padding:8px;border-bottom:1px solid #1a1d2e}
-.correct{color:#22c55e}
-.incorrect{color:#ef4444}
-.no-data{text-align:center;padding:40px;color:#94a3b8}
-a{color:#3b82f6;text-decoration:none}
-a:hover{text-decoration:underline}
+body{font-family:Consolas,'Courier New',monospace;background:#000;color:#ccc;font-size:13px;line-height:1.5}
+.top-bar{background:#ff6600;color:#000;padding:4px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px}
+.top-bar a{color:#000;text-decoration:none;margin-left:16px;font-weight:400}
+.top-bar a:hover{text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+.section{border:1px solid #333;margin-bottom:8px}
+.section-hdr{background:#111;padding:6px 10px;border-bottom:1px solid #333;color:#ff6600;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
+.section-body{padding:10px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.kpi{background:#0a0a0a;border:1px solid #333;padding:10px;text-align:center}
+.kpi-val{font-size:22px;font-weight:700;color:#fff;margin:4px 0}
+.kpi-lbl{font-size:10px;color:#666;text-transform:uppercase}
+.agent-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #1a1a1a}
+.agent-name{width:80px;font-weight:700;font-size:12px;color:#ff6600}
+.acc-bar{flex:1;height:16px;background:#111;position:relative;border:1px solid #222}
+.acc-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;font-weight:700;color:#000}
+.acc-stat{width:50px;text-align:right;font-size:11px;color:#666}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:6px 8px;color:#666;font-size:10px;text-transform:uppercase;border-bottom:1px solid #333}
+td{padding:6px 8px;border-bottom:1px solid #1a1a1a;font-size:12px}
+.green{color:#00cc00}.red{color:#ff3333}.dim{color:#666}
+.no-data{text-align:center;padding:40px;color:#666}
+@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<div class="container" id="app">
-  <header>
-    <h1>📈 Accuracy Tracker</h1>
-    <a href="index.html" style="font-size:0.85rem">← 대시보드로 돌아가기</a>
-  </header>
-  <div class="no-data" id="loading">데이터 로딩 중...</div>
+<div class="top-bar">
+  <span>PORTFOLIO COUNCIL AI — ACCURACY TRACKER</span>
+  <div><a href="index.html">DASHBOARD</a><a href="portfolio-editor.html">EDITOR</a><a href="history.html">HISTORY</a><a href="dev-status.html">DEV</a></div>
 </div>
+<div class="container" id="app"><div class="no-data">LOADING...</div></div>
 
 <script>
-async function loadData(){
-  try{
-    const r=await fetch('./data/accuracy.json?t='+Date.now());
-    if(r.ok)return await r.json();
-  }catch(e){}
-  return null;
-}
-
-function accColor(pct){
-  if(pct>=70)return'#22c55e';if(pct>=50)return'#eab308';return'#ef4444';
-}
+async function load(){try{const r=await fetch('./data/accuracy.json?t='+Date.now());if(r.ok)return await r.json();}catch(e){}return null;}
+function ac(p){return p>=70?'#00cc00':p>=50?'#ffcc00':'#ff3333';}
 
 function render(data){
-  if(!data){
-    document.getElementById('loading').innerHTML='<p>아직 적중률 데이터가 없습니다.</p><p style="margin-top:8px;font-size:0.85rem">포트폴리오 분석이 실행되고 일정 기간이 지나면 적중률이 계산됩니다.</p>';
-    return;
-  }
-
-  const o=data.overall;
-  const agents=data.by_agent||{};
-  const reports=data.by_report||[];
-
+  if(!data){document.getElementById('app').innerHTML='<div class="no-data">NO ACCURACY DATA YET<br><span class="dim">Run analyses and wait for evaluation period.</span></div>';return;}
+  const o=data.overall,agents=data.by_agent||{},reports=data.by_report||[];
   let html=`
-  <header>
-    <h1>📈 Accuracy Tracker</h1>
-    <div style="display:flex;gap:16px;align-items:center;margin-top:4px">
-      <a href="index.html" style="font-size:0.85rem">← 대시보드</a>
-      <span style="font-size:0.75rem;color:#94a3b8">기준: ${data.eval_days}일 | 평가 보고서: ${data.reports_evaluated}개 | 생성: ${new Date(data.generated_at).toLocaleDateString('ko')}</span>
-    </div>
-  </header>
-
   <div class="kpi-row">
-    <div class="kpi">
-      <div class="kpi-label">전체 적중률</div>
-      <div class="kpi-value" style="color:${o.accuracy_pct?accColor(o.accuracy_pct):'#94a3b8'}">${o.accuracy_pct!==null?o.accuracy_pct+'%':'N/A'}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">적중</div>
-      <div class="kpi-value" style="color:#22c55e">${o.correct}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">총 추천</div>
-      <div class="kpi-value">${o.total}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">평가 기간</div>
-      <div class="kpi-value">${data.eval_days}일</div>
-    </div>
+    <div class="kpi"><div class="kpi-lbl">Overall Accuracy</div><div class="kpi-val" style="color:${o.accuracy_pct?ac(o.accuracy_pct):'#666'}">${o.accuracy_pct!==null?o.accuracy_pct+'%':'N/A'}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Correct</div><div class="kpi-val green">${o.correct}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Total Picks</div><div class="kpi-val">${o.total}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Eval Period</div><div class="kpi-val">${data.eval_days}d</div></div>
   </div>`;
-
-  // 에이전트별 적중률
-  const agentNames=Object.keys(agents);
-  if(agentNames.length){
-    html+=`<div class="card"><div class="section-title">🤖 에이전트별 적중률</div>`;
-    for(const name of agentNames.sort((a,b)=>(agents[b].accuracy_pct||0)-(agents[a].accuracy_pct||0))){
-      const a=agents[name];
-      const pct=a.accuracy_pct||0;
-      html+=`<div class="agent-row">
-        <span class="agent-name">${name}</span>
-        <div class="acc-bar"><div class="acc-fill" style="width:${pct}%;background:${accColor(pct)}">${pct}%</div></div>
-        <span style="font-size:0.8rem;color:#94a3b8;width:60px;text-align:right">${a.correct}/${a.total}</span>
-      </div>`;
+  const names=Object.keys(agents);
+  if(names.length){
+    html+='<div class="section"><div class="section-hdr">Agent Accuracy</div><div class="section-body">';
+    for(const n of names.sort((a,b)=>(agents[b].accuracy_pct||0)-(agents[a].accuracy_pct||0))){
+      const a=agents[n],p=a.accuracy_pct||0;
+      html+=`<div class="agent-row"><span class="agent-name">${n}</span><div class="acc-bar"><div class="acc-fill" style="width:${p}%;background:${ac(p)}">${p}%</div></div><span class="acc-stat">${a.correct}/${a.total}</span></div>`;
     }
-    html+=`</div>`;
+    html+='</div></div>';
   }
-
-  // 보고서별 상세
   if(reports.length){
-    html+=`<div class="card"><div class="section-title">📋 보고서별 상세</div>
-    <table><thead><tr><th>날짜</th><th>종목</th><th>추천</th><th>실제 수익률</th><th>적중</th></tr></thead><tbody>`;
-    for(const r of reports){
-      for(const e of r.evaluations||[]){
-        html+=`<tr>
-          <td>${r.report_date}</td>
-          <td>${e.ticker}</td>
-          <td>${{increase:'📈 확대',reduce:'📉 축소',add_new:'🆕 신규',remove:'❌ 제거'}[e.action]||e.action}</td>
-          <td class="${e.actual_return_pct>=0?'correct':'incorrect'}">${e.actual_return_pct>0?'+':''}${e.actual_return_pct}%</td>
-          <td>${e.is_correct?'<span class="correct">✅</span>':'<span class="incorrect">❌</span>'}</td>
-        </tr>`;
-      }
-    }
-    html+=`</tbody></table></div>`;
+    html+='<div class="section"><div class="section-hdr">Detail by Report</div><div class="section-body"><table><thead><tr><th>Date</th><th>Ticker</th><th>Action</th><th>Return</th><th>Hit</th></tr></thead><tbody>';
+    for(const r of reports)for(const e of r.evaluations||[])
+      html+=`<tr><td>${r.report_date}</td><td style="color:#fff">${e.ticker}</td><td>${e.action}</td><td class="${e.actual_return_pct>=0?'green':'red'}">${e.actual_return_pct>0?'+':''}${e.actual_return_pct}%</td><td>${e.is_correct?'<span class="green">✓</span>':'<span class="red">✗</span>'}</td></tr>`;
+    html+='</tbody></table></div></div>';
   }
-
   document.getElementById('app').innerHTML=html;
 }
-
-loadData().then(render);
+load().then(render);
 </script>
 </body>
 </html>

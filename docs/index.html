@@ -1,640 +1,779 @@
 <!DOCTYPE html>
-<html lang="ko" class="dark">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Council AI - Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PORTFOLIO COUNCIL AI</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            900: '#0b0f19',
-                            800: '#111827',
-                            700: '#1e293b',
-                            600: '#334155',
-                            500: '#475569',
-                        },
-                        accent: {
-                            blue: '#3b82f6',
-                            green: '#10b981',
-                            red: '#ef4444',
-                            amber: '#f59e0b',
-                            purple: '#8b5cf6',
-                            cyan: '#06b6d4',
-                            pink: '#ec4899',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        /* === BLOOMBERG TERMINAL RESET === */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #444; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0b0f19;
-            color: #e2e8f0;
+            font-family: Consolas, 'Courier New', 'Liberation Mono', monospace;
+            background: #000000;
+            color: #FFFFFF;
+            font-size: 12px;
+            line-height: 1.4;
             min-height: 100vh;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-
-        /* Confidence bar */
-        .confidence-bar {
-            height: 6px;
-            border-radius: 3px;
-            background: #1e293b;
-            overflow: hidden;
+        /* === TOP HEADER BAR === */
+        .bb-header {
+            background: #FF6600;
+            color: #000;
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
         }
-        .confidence-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.8s ease;
-        }
-
-        /* Agent card expand */
-        .agent-detail {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            opacity: 0;
-        }
-        .agent-detail.expanded {
-            max-height: 600px;
-            opacity: 1;
+        .bb-header .title { font-size: 15px; letter-spacing: 2px; }
+        .bb-header .meta { font-size: 11px; display: flex; gap: 16px; align-items: center; }
+        .bb-consensus-badge {
+            background: #000;
+            color: #FF6600;
+            padding: 2px 8px;
+            font-size: 10px;
+            letter-spacing: 1px;
         }
 
-        /* Chat bubble */
-        .chat-bubble {
+        /* === NAV BAR === */
+        .bb-nav {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 3px 12px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .bb-nav a {
+            color: #FF6600;
+            text-decoration: none;
+            padding: 2px 10px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            border: 1px solid transparent;
+        }
+        .bb-nav a:hover { border-color: #FF6600; }
+        .bb-nav a.active { background: #FF6600; color: #000; }
+        .bb-nav .sep { color: #333; margin: 0 2px; }
+
+        /* === MAIN CONTENT === */
+        .bb-main { padding: 6px; }
+
+        /* === KPI ROW === */
+        .bb-kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #333;
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+        .bb-kpi {
+            background: #000;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        .bb-kpi .label {
+            color: #888;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .bb-kpi .value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+        .bb-kpi .sub {
+            font-size: 9px;
+            color: #666;
+            margin-top: 1px;
+        }
+
+        /* === SPLIT PANELS === */
+        .bb-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #333;
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+        .bb-panel {
+            background: #000;
+            padding: 8px;
+        }
+        .bb-panel-title {
+            color: #FF6600;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+
+        /* === CHART === */
+        .bb-chart-wrap {
             position: relative;
-            border-radius: 12px;
-            padding: 12px 16px;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
         }
-        .chat-bubble::before {
-            content: '';
+
+        /* === TABLE === */
+        .bb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .bb-table th {
+            text-align: left;
+            color: #FF6600;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 6px;
+            border-bottom: 1px solid #333;
+            font-weight: normal;
+        }
+        .bb-table td {
+            padding: 3px 6px;
+            border-bottom: 1px solid #1a1a1a;
+            color: #ccc;
+        }
+        .bb-table tr:hover td { background: #0a0a0a; }
+        .bb-table .ticker { color: #FFFF00; font-weight: bold; }
+        .bb-table .up { color: #00FF00; }
+        .bb-table .down { color: #FF0000; }
+        .bb-table .action-buy { color: #00FF00; }
+        .bb-table .action-sell { color: #FF0000; }
+        .bb-table .action-hold { color: #FFFF00; }
+        .bb-table .action-reduce { color: #FF6600; }
+        .bb-table .action-increase { color: #00FF00; }
+
+        /* === AGENT GRID === */
+        .bb-agent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: #333;
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+        .bb-agent-card {
+            background: #000;
+            padding: 8px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .bb-agent-card:hover { background: #0a0a0a; }
+        .bb-agent-card.expanded { grid-column: span 3; }
+        .bb-agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .bb-agent-name {
+            color: #FF6600;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .bb-agent-avatar { font-size: 14px; }
+        .bb-agent-stance {
+            display: inline-block;
+            padding: 1px 6px;
+            font-size: 9px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .stance-overweight { background: #003300; color: #00FF00; border: 1px solid #00FF00; }
+        .stance-underweight { background: #330000; color: #FF0000; border: 1px solid #FF0000; }
+        .stance-neutral { background: #333300; color: #FFFF00; border: 1px solid #FFFF00; }
+        .stance-hold { background: #1a1a00; color: #FFFF00; border: 1px solid #FFFF00; }
+        .bb-agent-conf {
+            font-size: 10px;
+            color: #888;
+            margin: 4px 0;
+        }
+        .bb-agent-conf span { color: #FFF; }
+        .bb-agent-points {
+            font-size: 10px;
+            color: #aaa;
+            line-height: 1.5;
+        }
+        .bb-agent-points li {
+            list-style: none;
+            padding-left: 10px;
+            position: relative;
+        }
+        .bb-agent-points li::before {
+            content: '>';
             position: absolute;
-            top: 12px;
-            width: 0; height: 0;
+            left: 0;
+            color: #FF6600;
         }
-        .chat-from::before {
-            left: -6px;
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-            border-right: 6px solid #1e293b;
+        .bb-agent-detail {
+            display: none;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid #333;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.6;
         }
-        .chat-to::before {
-            right: -6px;
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-            border-left: 6px solid #162032;
+        .bb-agent-card.expanded .bb-agent-detail { display: block; }
+
+        /* === CRITIQUE SECTION === */
+        .bb-critique-section {
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+        .bb-critique-title {
+            background: #111;
+            color: #FF6600;
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-bottom: 1px solid #333;
+        }
+        .bb-critique-log {
+            padding: 8px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .bb-critique-entry {
+            margin-bottom: 8px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        .bb-critique-entry .prompt {
+            color: #00FF00;
+        }
+        .bb-critique-entry .target {
+            color: #FF6600;
+        }
+        .bb-critique-entry .text {
+            color: #999;
+            padding-left: 16px;
         }
 
-        /* Glow effect for consensus badge */
-        .glow-green { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .glow-amber { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-        .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        /* === RISK WARNING === */
+        .bb-risk-bar {
+            background: #1a0000;
+            border: 1px solid #FF0000;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+        }
+        .bb-risk-title {
+            color: #FF0000;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .bb-risk-item {
+            color: #FF6666;
+            font-size: 11px;
+            padding: 2px 0;
+            padding-left: 14px;
+            position: relative;
+        }
+        .bb-risk-item::before {
+            content: '!';
+            position: absolute;
+            left: 0;
+            color: #FF0000;
+            font-weight: bold;
+        }
 
-        /* KPI hover */
-        .kpi-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        /* === KEY INSIGHTS === */
+        .bb-insights {
+            border: 1px solid #333;
+            margin-bottom: 6px;
         }
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .bb-insights-title {
+            background: #111;
+            color: #FFFF00;
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-bottom: 1px solid #333;
+        }
+        .bb-insights-body {
+            padding: 8px 10px;
+        }
+        .bb-insight-item {
+            color: #ccc;
+            font-size: 11px;
+            padding: 2px 0;
+            padding-left: 14px;
+            position: relative;
+        }
+        .bb-insight-item::before {
+            content: '*';
+            position: absolute;
+            left: 0;
+            color: #FFFF00;
         }
 
-        /* Pulse animation for live indicator */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        /* === CASH REC === */
+        .bb-cash {
+            border: 1px solid #333;
+            margin-bottom: 6px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        .pulse { animation: pulse 2s ease-in-out infinite; }
+        .bb-cash-label {
+            color: #888;
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+        .bb-cash-val { font-size: 16px; font-weight: bold; }
+        .bb-cash-arrow { color: #FF6600; font-size: 18px; }
+        .bb-cash-reason { color: #888; font-size: 10px; flex: 1; }
 
-        /* Table row hover */
-        .change-row {
-            transition: background 0.15s ease;
-        }
-        .change-row:hover {
-            background: rgba(59, 130, 246, 0.08) !important;
+        /* === DISCLAIMER === */
+        .bb-disclaimer {
+            color: #444;
+            font-size: 9px;
+            padding: 8px 10px;
+            border-top: 1px solid #222;
+            line-height: 1.5;
         }
 
-        /* Agent avatar colors */
-        .avatar-macro { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-        .avatar-quant { background: linear-gradient(135deg, #10b981, #059669); }
-        .avatar-risk { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .avatar-sentiment { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .avatar-technical { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .avatar-fundamental { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        /* === CONF BAR === */
+        .conf-bar {
+            width: 60px;
+            height: 6px;
+            background: #222;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .conf-bar-fill {
+            height: 100%;
+            background: #FF6600;
+        }
+
+        /* === STATUS LINE === */
+        .bb-status {
+            background: #111;
+            border-top: 1px solid #333;
+            padding: 2px 12px;
+            font-size: 9px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* === LOADING === */
+        .bb-loading {
+            text-align: center;
+            padding: 40px;
+            color: #FF6600;
+            font-size: 14px;
+        }
+        .bb-loading .blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .bb-kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .bb-split { grid-template-columns: 1fr; }
+            .bb-agent-grid { grid-template-columns: 1fr; }
+            .bb-agent-card.expanded { grid-column: span 1; }
+            .bb-header { flex-direction: column; gap: 4px; text-align: center; }
+            .bb-cash { flex-direction: column; gap: 6px; }
+        }
+        @media (max-width: 480px) {
+            .bb-kpi-row { grid-template-columns: 1fr 1fr; }
+            .bb-kpi .value { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
-    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- 1. HEADER -->
-        <header id="header" class="bg-gradient-to-r from-dark-800 via-dark-700 to-dark-800 rounded-2xl p-6 border border-dark-600/50">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Portfolio Council AI</h1>
-                        <p id="header-date" class="text-sm text-slate-400 mt-0.5"></p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <a href="portfolio-editor.html" class="text-xs px-3 py-1.5 rounded-lg border border-dark-600 text-slate-400 hover:border-blue-500 hover:text-blue-400 transition">📝 Editor</a>
-                    <a href="history.html" class="text-xs px-3 py-1.5 rounded-lg border border-dark-600 text-slate-400 hover:border-yellow-500 hover:text-yellow-400 transition">📅 History</a>
-                    <a href="accuracy.html" class="text-xs px-3 py-1.5 rounded-lg border border-dark-600 text-slate-400 hover:border-green-500 hover:text-green-400 transition">📈 Accuracy</a>
-                    <a href="dev-status.html" class="text-xs px-3 py-1.5 rounded-lg border border-dark-600 text-slate-400 hover:border-purple-500 hover:text-purple-400 transition">🛠️ Dev</a>
-                    <span class="pulse inline-block w-2 h-2 rounded-full bg-green-400"></span>
-                    <div id="consensus-badge" class="px-4 py-2 rounded-xl text-sm font-semibold"></div>
-                </div>
-            </div>
-        </header>
-
-        <!-- 2. KPI CARDS -->
-        <section id="kpi-section" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></section>
-
-        <!-- 3. PORTFOLIO DONUT CHART -->
-        <section class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50">
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                </svg>
-                Portfolio Allocation
-            </h2>
-            <div class="flex flex-col lg:flex-row items-center gap-6">
-                <div class="w-full lg:w-1/2" style="max-height: 320px;">
-                    <canvas id="portfolio-donut"></canvas>
-                </div>
-                <div id="portfolio-legend" class="w-full lg:w-1/2 grid grid-cols-2 gap-3"></div>
-            </div>
-        </section>
-
-        <!-- 4. AGENT CARDS -->
-        <section>
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                Agent Analysis Panel
-            </h2>
-            <div id="agents-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        </section>
-
-        <!-- 5. WEIGHT CHANGES TABLE -->
-        <section class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50 overflow-x-auto">
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                </svg>
-                Weight Change Proposals
-            </h2>
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="text-left text-slate-400 border-b border-dark-600">
-                        <th class="py-3 px-4 font-semibold">Ticker</th>
-                        <th class="py-3 px-4 font-semibold">Before</th>
-                        <th class="py-3 px-4 font-semibold text-center">Direction</th>
-                        <th class="py-3 px-4 font-semibold">After</th>
-                        <th class="py-3 px-4 font-semibold">Change</th>
-                        <th class="py-3 px-4 font-semibold">Reason</th>
-                    </tr>
-                </thead>
-                <tbody id="changes-table"></tbody>
-            </table>
-        </section>
-
-        <!-- 6. CROSS-DEBATE CHAT -->
-        <section class="bg-dark-800 rounded-2xl p-6 border border-dark-600/50">
-            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                Cross-Agent Debate
-            </h2>
-            <div id="debate-chat" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div>
-        </section>
-
-        <!-- 7. DISCLAIMER FOOTER -->
-        <footer class="bg-dark-800/50 rounded-2xl p-6 border border-dark-600/30 text-center">
-            <p class="text-xs text-slate-500 leading-relaxed max-w-3xl mx-auto">
-                <span class="text-slate-400 font-semibold">Disclaimer:</span>
-                This dashboard is generated by AI agents for informational and educational purposes only.
-                It does not constitute financial advice, investment recommendations, or solicitation to buy or sell any securities.
-                Past performance is not indicative of future results. All investment decisions should be made after consulting
-                with a qualified financial advisor. The AI agents' analyses may contain errors and should not be solely relied upon
-                for making investment decisions. Use at your own risk.
-            </p>
-            <p class="text-xs text-slate-600 mt-3">Portfolio Council AI v1.0 &copy; 2026</p>
-        </footer>
+<!-- HEADER -->
+<div class="bb-header">
+    <span class="title">PORTFOLIO COUNCIL AI</span>
+    <div class="meta">
+        <span id="hdr-date">--</span>
+        <span class="bb-consensus-badge" id="hdr-consensus">--</span>
+        <span id="hdr-time"></span>
     </div>
+</div>
 
-    <script>
-    // ============================================================
-    // DEMO DATA (fallback when latest_analysis.json is unavailable)
-    // ============================================================
-    const DEMO_DATA = {
-        meta: {
-            generated_at: new Date().toISOString(),
-            session_id: "demo-session-001",
-            consensus_type: "Strong Consensus",
-            overall_confidence: 0.82,
-        },
-        kpis: {
-            consensus_type: "Strong Consensus",
-            confidence: 82,
-            proposed_changes: 5,
-            risk_alerts: 2,
-        },
-        portfolio: [
-            { ticker: "AAPL", name: "Apple Inc.", weight: 18.5, sector: "Technology" },
-            { ticker: "MSFT", name: "Microsoft", weight: 15.2, sector: "Technology" },
-            { ticker: "GOOGL", name: "Alphabet", weight: 12.8, sector: "Technology" },
-            { ticker: "AMZN", name: "Amazon", weight: 10.5, sector: "Consumer" },
-            { ticker: "NVDA", name: "NVIDIA", weight: 9.3, sector: "Technology" },
-            { ticker: "JPM", name: "JPMorgan", weight: 7.8, sector: "Finance" },
-            { ticker: "JNJ", name: "J&J", weight: 6.4, sector: "Healthcare" },
-            { ticker: "V", name: "Visa", weight: 5.9, sector: "Finance" },
-            { ticker: "UNH", name: "UnitedHealth", weight: 5.2, sector: "Healthcare" },
-            { ticker: "CASH", name: "Cash", weight: 8.4, sector: "Cash" },
+<!-- NAV -->
+<div class="bb-nav">
+    <a href="index.html" class="active">DASHBOARD</a>
+    <span class="sep">|</span>
+    <a href="portfolio-editor.html">EDITOR</a>
+    <span class="sep">|</span>
+    <a href="history.html">HISTORY</a>
+    <span class="sep">|</span>
+    <a href="accuracy.html">ACCURACY</a>
+    <span class="sep">|</span>
+    <a href="dev-status.html">DEV</a>
+</div>
+
+<!-- MAIN -->
+<div class="bb-main" id="app">
+    <div class="bb-loading" id="loading">
+        <div>LOADING ANALYSIS DATA<span class="blink">_</span></div>
+    </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="bb-status">
+    <span>PORTFOLIO COUNCIL AI v2.0 | BLOOMBERG TERMINAL STYLE</span>
+    <span id="status-clock"></span>
+</div>
+
+<script>
+// ========== DEMO DATA ==========
+const DEMO_DATA = {
+    date: "2026-04-13",
+    portfolio: {
+        name: "Tech Growth Portfolio",
+        holdings: [
+            {ticker:"AAPL", name:"Apple Inc", weight:20, sector:"Technology"},
+            {ticker:"MSFT", name:"Microsoft", weight:18, sector:"Technology"},
+            {ticker:"NVDA", name:"NVIDIA", weight:15, sector:"Semiconductors"},
+            {ticker:"GOOGL", name:"Alphabet", weight:12, sector:"Technology"},
+            {ticker:"AMZN", name:"Amazon", weight:10, sector:"Consumer"},
+            {ticker:"TSLA", name:"Tesla", weight:8, sector:"Automotive"},
+            {ticker:"META", name:"Meta Platforms", weight:7, sector:"Technology"}
         ],
-        agents: [
-            {
-                id: "macro",
-                name: "Macro Strategist",
-                avatar_class: "avatar-macro",
-                stance: "Bullish",
-                confidence: 78,
-                summary: "Global growth indicators are improving. PMI data shows expansion across major economies. Rate cuts expected in H2 provide tailwind for equities. Recommends overweight in cyclicals and reduction in cash position.",
-                detail: "Leading indicators suggest synchronized global recovery. US consumer spending remains resilient despite elevated rates. European manufacturing PMI crossed above 50 for first time in 18 months. China stimulus measures gaining traction with property sector stabilizing."
-            },
-            {
-                id: "quant",
-                name: "Quant Analyst",
-                avatar_class: "avatar-quant",
-                stance: "Moderately Bullish",
-                confidence: 85,
-                summary: "Factor models favor momentum and quality. Risk-adjusted returns optimal at current equity allocation +3%. Volatility regime is low-normal suggesting opportunity for measured risk-taking.",
-                detail: "Multi-factor model output: Momentum Z-score +1.8, Quality +1.2, Value -0.3. Optimal Sharpe portfolio suggests 3% shift from fixed income to equities. VIX term structure in contango supports carry strategies. Mean reversion signals neutral."
-            },
-            {
-                id: "risk",
-                name: "Risk Manager",
-                avatar_class: "avatar-risk",
-                stance: "Cautious",
-                confidence: 72,
-                summary: "Tail risk elevated due to geopolitical tensions. Portfolio VaR approaching upper threshold. Recommends maintaining hedge positions and not reducing cash below 7%. Credit spreads warrant monitoring.",
-                detail: "95th percentile VaR: $2.3M (threshold: $2.5M). Geopolitical risk premium has increased 40bps in last month. Correlation matrix shows rising cross-asset correlation suggesting regime shift risk. Recommend maintaining put protection on SPX."
-            },
-            {
-                id: "sentiment",
-                name: "Sentiment Analyst",
-                avatar_class: "avatar-sentiment",
-                stance: "Bullish",
-                confidence: 80,
-                summary: "Social media sentiment shifted positive last week. Institutional flow data shows accumulation in tech and healthcare. Retail sentiment not yet euphoric suggesting room for upside.",
-                detail: "NLP analysis of 50K+ social posts shows 68% positive sentiment (up from 52%). Dark pool activity elevated in NVDA, MSFT. Put/call ratio at 0.72 (neutral zone). AAII survey: 45% bullish (below euphoria threshold of 60%)."
-            },
-            {
-                id: "technical",
-                name: "Technical Analyst",
-                avatar_class: "avatar-technical",
-                stance: "Bullish",
-                confidence: 88,
-                summary: "Major indices holding above 200-day MA with strong breadth. Multiple sectors confirming breakout patterns. Volume profile supports continuation. Key resistance at SPX 5,400.",
-                detail: "SPX: Above 20/50/200 DMA, RSI 62 (bullish but not overbought). NYSE advance/decline line making new highs. Sector rotation into cyclicals confirmed. Fibonacci extension targets 5,450. Support at 5,180 (50-DMA)."
-            },
-            {
-                id: "fundamental",
-                name: "Fundamental Analyst",
-                avatar_class: "avatar-fundamental",
-                stance: "Moderately Bullish",
-                confidence: 76,
-                summary: "Q1 earnings season positive with 72% beat rate. Forward P/E reasonable at 19.8x given growth outlook. Revenue growth accelerating in tech. Margins stabilizing in consumer sector.",
-                detail: "S&P 500 blended EPS growth: +8.2% YoY. Tech sector leading with +15% growth. Healthcare showing recovery with +6%. Financials benefiting from steeper yield curve. Top picks: NVDA (AI capex cycle), UNH (demographic tailwind)."
-            }
+        cash_weight: 10
+    },
+    debate: {
+        phase1_reports: [
+            {agent_name:"퀀트", avatar:"\ud83d\udd22", role:"Quantitative Analyst", analysis:"모멘텀 시그널이 약화되고 있으며, RSI 과매수 구간 진입. 변동성 확대 국면에서 방어적 포지션 전환 권고. VIX 20 상회 시 추가 하방 리스크 존재.", key_points:["RSI 과매수 경고","모멘텀 둔화 신호","변동성 확대 우려"], confidence_score:75, overall_stance:"UNDERWEIGHT"},
+            {agent_name:"가치투자자", avatar:"\ud83d\udcb0", role:"Value Investor", analysis:"현재 밸류에이션 PER 28x로 역사적 평균 대비 고평가. AAPL, MSFT의 FCF yield이 3% 미만으로 안전마진 부족. 현금 비중 확대 후 조정 시 매수 기회 포착 전략.", key_points:["PER 28x 고평가","FCF yield 부족","현금 확대 권고"], confidence_score:82, overall_stance:"UNDERWEIGHT"},
+            {agent_name:"성장투자자", avatar:"\ud83d\ude80", role:"Growth Investor", analysis:"AI 인프라 투자 사이클 2단계 진입. NVDA 데이터센터 매출 QoQ +15% 예상. 클라우드 Capex 확대로 반도체-소프트웨어 밸류체인 수혜 지속. 성장주 비중 유지 권고.", key_points:["AI 투자 사이클 2단계","NVDA 매출 성장 기대","클라우드 Capex 확대"], confidence_score:70, overall_stance:"OVERWEIGHT"},
+            {agent_name:"매크로", avatar:"\ud83c\udf0d", role:"Macro Strategist", analysis:"Fed 금리 인하 기대 후퇴, 10Y 국채 4.5% 돌파. 강달러 환경에서 수출 기업 실적 압박. 인플레이션 재점화 리스크 모니터링 필요. 방어적 스탠스 유지.", key_points:["금리 인하 기대 후퇴","강달러 수출 압박","인플레 재점화 리스크"], confidence_score:78, overall_stance:"UNDERWEIGHT"},
+            {agent_name:"리스크매니저", avatar:"\u26a0\ufe0f", role:"Risk Manager", analysis:"포트폴리오 테크 섹터 집중도 80% 초과, 분산 미흡. 최대 드로다운 시나리오 -18% 추정. 헤지 전략과 현금 비중 확대로 꼬리 리스크 완화 필요.", key_points:["섹터 집중도 과다","Max DD -18% 추정","헤지 전략 필요"], confidence_score:85, overall_stance:"UNDERWEIGHT"},
+            {agent_name:"심리분석가", avatar:"\ud83e\udde0", role:"Sentiment Analyst", analysis:"Fear & Greed Index 72(Greed). 개인투자자 레버리지 매수 급증. 소셜 미디어 FOMO 신호 감지. 과열 구간으로 단기 조정 가능성 높음. 역발상 매도 시그널.", key_points:["Greed 구간 진입","레버리지 매수 급증","FOMO 과열 신호"], confidence_score:72, overall_stance:"UNDERWEIGHT"}
         ],
-        weight_changes: [
-            { ticker: "NVDA", before: 9.3, after: 11.5, reason: "AI capex cycle acceleration; strong earnings momentum and institutional accumulation" },
-            { ticker: "CASH", before: 8.4, after: 6.5, reason: "Deploy cash into equities as macro conditions improve; opportunity cost too high" },
-            { ticker: "JPM", before: 7.8, after: 8.8, reason: "Steepening yield curve benefits; strong trading revenue outlook" },
-            { ticker: "GOOGL", before: 12.8, after: 11.8, reason: "Trim on regulatory overhang; antitrust risk warrants position reduction" },
-            { ticker: "UNH", before: 5.2, after: 6.0, reason: "Defensive quality holding; demographic tailwind and earnings visibility" },
-        ],
-        debates: [
-            { from: "Risk Manager", to: "Macro Strategist", text: "Your bullish thesis underweights the geopolitical tail risk. The current VaR is dangerously close to our threshold. Reducing cash below 7% leaves us exposed if correlations spike.", color_from: "#ef4444", color_to: "#3b82f6" },
-            { from: "Macro Strategist", to: "Risk Manager", text: "Geopolitical risk is priced in. The VIX term structure shows no panic. Holding excess cash in a cutting cycle has a quantifiable opportunity cost of ~150bps annually.", color_from: "#3b82f6", color_to: "#ef4444" },
-            { from: "Fundamental Analyst", to: "Technical Analyst", text: "The breakout you're seeing may be a bull trap. Forward P/E at 19.8x is fair but not cheap. We need earnings delivery to justify these levels.", color_from: "#06b6d4", color_to: "#8b5cf6" },
-            { from: "Technical Analyst", to: "Fundamental Analyst", text: "Breadth confirms this isn't a narrow rally. 78% of S&P components above their 200-DMA. Price action leads fundamentals, and the trend is clearly up.", color_from: "#8b5cf6", color_to: "#06b6d4" },
-            { from: "Sentiment Analyst", to: "Risk Manager", text: "Retail sentiment is nowhere near euphoria. AAII bullish at 45% vs 60%+ at tops. The fear you're expressing is actually a contrarian bullish signal.", color_from: "#f59e0b", color_to: "#ef4444" },
-            { from: "Quant Analyst", to: "Fundamental Analyst", text: "Our factor model agrees on NVDA overweight. Momentum + Quality factors both score positive. The mean reversion concern is statistically premature.", color_from: "#10b981", color_to: "#06b6d4" },
+        phase2_critiques: [
+            {from_agent:"퀀트", to_agent:"성장투자자", critique:"AI 성장 내러티브에 과도하게 의존. NVDA P/S 30x는 이미 장밋빛 시나리오를 반영. 기대 대비 실적 미스 시 급락 리스크 과소평가."},
+            {from_agent:"성장투자자", to_agent:"가치투자자", critique:"전통적 밸류 지표로 AI 혁명기 기업을 평가하는 것은 부적절. TAM 확장과 수익성 개선 트렌드를 고려하면 현 밸류에이션 정당화 가능."},
+            {from_agent:"가치투자자", to_agent:"성장투자자", critique:"모든 버블이 '이번엔 다르다'로 시작. FCF 기반 내재가치 대비 50% 프리미엄은 장기 투자자 관점에서 수용 불가."},
+            {from_agent:"매크로", to_agent:"퀀트", critique:"기술적 지표만으로 매크로 레짐 변화를 포착하기 어려움. 금리 환경 변화가 멀티플 압축으로 이어질 수 있는 구조적 리스크 과소평가."},
+            {from_agent:"리스크매니저", to_agent:"성장투자자", critique:"집중 포지션의 꼬리 리스크를 과소평가. 2022년 테크 하락장 재현 시 -30% 이상 손실 가능. 분산과 헤지가 수익률보다 우선."},
+            {from_agent:"심리분석가", to_agent:"매크로", critique:"매크로 지표는 후행적. 시장 심리 선행지표가 이미 과열을 경고 중. 심리 반전 시 매크로 데이터와 무관하게 급락 가능."}
         ]
-    };
+    },
+    verdict: {
+        consensus_type: "strong_consensus",
+        confidence_score: 76,
+        summary: "6명 에이전트 중 5명이 UNDERWEIGHT 의견. 밸류에이션 부담, 금리 환경 악화, 심리 과열이 복합적으로 작용. 테크 비중 축소 및 현금 확대 권고.",
+        portfolio_changes: [
+            {ticker:"AAPL", name:"Apple", action:"reduce", from_weight:20, to_weight:16, reason:"밸류에이션 부담, FCF yield 부족"},
+            {ticker:"NVDA", name:"NVIDIA", action:"reduce", from_weight:15, to_weight:12, reason:"P/S 30x 과열, 기대 실적 미스 리스크"},
+            {ticker:"TSLA", name:"Tesla", action:"reduce", from_weight:8, to_weight:5, reason:"변동성 과다, 실적 불확실성"},
+            {ticker:"MSFT", name:"Microsoft", action:"hold", from_weight:18, to_weight:18, reason:"클라우드 성장 안정적, 밸류에이션 상대 양호"},
+            {ticker:"GOOGL", name:"Alphabet", action:"hold", from_weight:12, to_weight:12, reason:"광고 매출 회복, AI 투자 수혜"},
+            {ticker:"AMZN", name:"Amazon", action:"increase", from_weight:10, to_weight:12, reason:"AWS 성장 가속, 리테일 마진 개선"}
+        ],
+        risk_warnings: [
+            "테크 섹터 집중도 80% 초과 - 분산 시급",
+            "금리 인상 재개 시 멀티플 압축 -15~20% 가능",
+            "AI 버블 논쟁 심화 - 실적 시즌 변곡점 주의",
+            "지정학적 리스크 (대중 반도체 규제 확대 가능성)"
+        ],
+        stance_votes: {"퀀트":"UNDERWEIGHT","가치투자자":"UNDERWEIGHT","성장투자자":"OVERWEIGHT","매크로":"UNDERWEIGHT","리스크매니저":"UNDERWEIGHT","심리분석가":"UNDERWEIGHT"},
+        key_insights: [
+            "5:1 UNDERWEIGHT 합의 - 방어적 포지션 전환 권고",
+            "현금 비중 10% → 18% 확대로 드로다운 완충",
+            "NVDA, AAPL 비중 축소 후 조정 시 재진입 전략",
+            "AMZN 유일한 비중 확대 - AWS + 리테일 이중 성장",
+            "다음 실적 시즌(4월 말)이 시장 방향 결정적 변곡점"
+        ],
+        cash_recommendation: {current:10, target:18, reason:"드로다운 완충 및 조정 시 매수 여력 확보"}
+    }
+};
 
-    // ============================================================
-    // CHART COLORS
-    // ============================================================
-    const CHART_COLORS = [
-        '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-        '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'
-    ];
+// ========== APP ==========
+let analysisData = null;
 
-    const STANCE_COLORS = {
-        'Bullish': '#10b981',
-        'Moderately Bullish': '#34d399',
-        'Neutral': '#f59e0b',
-        'Cautious': '#f97316',
-        'Moderately Bearish': '#fb923c',
-        'Bearish': '#ef4444',
-    };
+async function loadData() {
+    try {
+        const res = await fetch('data/latest_analysis.json');
+        if (!res.ok) throw new Error('No data file');
+        analysisData = await res.json();
+    } catch(e) {
+        console.log('Using demo data:', e.message);
+        analysisData = DEMO_DATA;
+    }
+    render();
+}
 
-    const CONSENSUS_STYLES = {
-        'Strong Consensus': { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/40', glow: 'glow-green' },
-        'Moderate Consensus': { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/40', glow: 'glow-amber' },
-        'Weak Consensus': { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/40', glow: 'glow-red' },
-        'Divided': { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/40', glow: 'glow-red' },
-    };
+function render() {
+    const d = analysisData;
+    document.getElementById('hdr-date').textContent = d.date;
+    const ct = d.verdict.consensus_type.replace(/_/g,' ').toUpperCase();
+    const badge = document.getElementById('hdr-consensus');
+    badge.textContent = ct;
 
-    // ============================================================
-    // DASHBOARD CLASS
-    // ============================================================
-    class Dashboard {
-        constructor(data) {
-            this.data = data;
-            this.donutChart = null;
-            this.init();
-        }
+    const app = document.getElementById('app');
+    app.innerHTML = '';
 
-        init() {
-            this.renderHeader();
-            this.renderKPIs();
-            this.renderDonut();
-            this.renderAgents();
-            this.renderChangesTable();
-            this.renderDebateChat();
-        }
+    // KPI ROW
+    const totalAgents = d.debate.phase1_reports.length;
+    const votes = d.verdict.stance_votes;
+    const underCount = Object.values(votes).filter(v=>v==='UNDERWEIGHT').length;
+    const overCount = Object.values(votes).filter(v=>v==='OVERWEIGHT').length;
+    const holdCount = totalAgents - underCount - overCount;
 
-        renderHeader() {
-            const d = this.data.meta || {};
-            const dateStr = d.generated_at
-                ? new Date(d.generated_at).toLocaleString('ko-KR', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' })
-                : new Date().toLocaleString('ko-KR', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    app.innerHTML += `
+    <div class="bb-kpi-row">
+        <div class="bb-kpi">
+            <div class="label">CONFIDENCE</div>
+            <div class="value" style="color:${d.verdict.confidence_score>=70?'#00FF00':'#FFFF00'}">${d.verdict.confidence_score}%</div>
+            <div class="sub">${ct}</div>
+        </div>
+        <div class="bb-kpi">
+            <div class="label">AGENTS</div>
+            <div class="value">${totalAgents}</div>
+            <div class="sub" style="color:#00FF00">OW:${overCount} <span style="color:#FF0000">UW:${underCount}</span> <span style="color:#FFFF00">H:${holdCount}</span></div>
+        </div>
+        <div class="bb-kpi">
+            <div class="label">CASH TARGET</div>
+            <div class="value" style="color:#FF6600">${d.verdict.cash_recommendation.target}%</div>
+            <div class="sub">FROM ${d.verdict.cash_recommendation.current}%</div>
+        </div>
+        <div class="bb-kpi">
+            <div class="label">CHANGES</div>
+            <div class="value">${d.verdict.portfolio_changes.length}</div>
+            <div class="sub">REBALANCE ACTIONS</div>
+        </div>
+    </div>`;
 
-            document.getElementById('header-date').textContent = `Analysis: ${dateStr}`;
+    // CASH RECOMMENDATION
+    app.innerHTML += `
+    <div class="bb-cash">
+        <div>
+            <div class="bb-cash-label">CASH ALLOCATION</div>
+            <div class="bb-cash-val" style="color:#FFFF00">${d.verdict.cash_recommendation.current}%</div>
+        </div>
+        <div class="bb-cash-arrow">&rarr;</div>
+        <div>
+            <div class="bb-cash-label">TARGET</div>
+            <div class="bb-cash-val" style="color:#00FF00">${d.verdict.cash_recommendation.target}%</div>
+        </div>
+        <div class="bb-cash-reason">${d.verdict.cash_recommendation.reason}</div>
+    </div>`;
 
-            const ct = d.consensus_type || this.data.kpis?.consensus_type || 'Strong Consensus';
-            const style = CONSENSUS_STYLES[ct] || CONSENSUS_STYLES['Strong Consensus'];
-            const badge = document.getElementById('consensus-badge');
-            badge.className = `px-4 py-2 rounded-xl text-sm font-semibold border ${style.bg} ${style.text} ${style.border} ${style.glow}`;
-            badge.textContent = ct;
-        }
+    // SPLIT: CHART + TABLE
+    app.innerHTML += `
+    <div class="bb-split">
+        <div class="bb-panel">
+            <div class="bb-panel-title">PORTFOLIO ALLOCATION</div>
+            <div class="bb-chart-wrap"><canvas id="donutChart"></canvas></div>
+        </div>
+        <div class="bb-panel">
+            <div class="bb-panel-title">REBALANCE ACTIONS</div>
+            <table class="bb-table">
+                <thead>
+                    <tr><th>TICKER</th><th>NAME</th><th>ACTION</th><th>FROM</th><th>TO</th><th>CHG</th></tr>
+                </thead>
+                <tbody id="changeTable"></tbody>
+            </table>
+        </div>
+    </div>`;
 
-        renderKPIs() {
-            const k = this.data.kpis || {};
-            const kpis = [
-                { label: 'Consensus Type', value: k.consensus_type || 'N/A', icon: '🤝', color: 'from-blue-500/20 to-blue-600/10', textColor: 'text-blue-400' },
-                { label: 'Overall Confidence', value: `${k.confidence || 0}%`, icon: '🎯', color: 'from-green-500/20 to-green-600/10', textColor: 'text-green-400' },
-                { label: 'Proposed Changes', value: k.proposed_changes || 0, icon: '📊', color: 'from-amber-500/20 to-amber-600/10', textColor: 'text-amber-400' },
-                { label: 'Risk Alerts', value: k.risk_alerts || 0, icon: '⚠️', color: 'from-red-500/20 to-red-600/10', textColor: 'text-red-400' },
-            ];
+    // Fill table
+    const tbody = document.getElementById('changeTable');
+    d.verdict.portfolio_changes.forEach(c => {
+        const chg = c.to_weight - c.from_weight;
+        const chgStr = chg > 0 ? `+${chg}%` : `${chg}%`;
+        const chgClass = chg > 0 ? 'up' : chg < 0 ? 'down' : '';
+        const actionMap = {reduce:'action-reduce', increase:'action-increase', hold:'action-hold', buy:'action-buy', sell:'action-sell'};
+        const aClass = actionMap[c.action] || '';
+        tbody.innerHTML += `<tr>
+            <td class="ticker">${c.ticker}</td>
+            <td>${c.name}</td>
+            <td class="${aClass}">${c.action.toUpperCase()}</td>
+            <td>${c.from_weight}%</td>
+            <td>${c.to_weight}%</td>
+            <td class="${chgClass}">${chgStr}</td>
+        </tr>`;
+    });
 
-            const container = document.getElementById('kpi-section');
-            container.innerHTML = kpis.map(kpi => `
-                <div class="kpi-card bg-gradient-to-br ${kpi.color} bg-dark-800 rounded-2xl p-5 border border-dark-600/50">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${kpi.label}</span>
-                        <span class="text-lg">${kpi.icon}</span>
-                    </div>
-                    <div class="text-2xl font-bold ${kpi.textColor}">${kpi.value}</div>
-                </div>
-            `).join('');
-        }
+    // Draw chart
+    setTimeout(() => drawDonut(d), 50);
 
-        renderDonut() {
-            const portfolio = this.data.portfolio || [];
-            if (!portfolio.length) return;
+    // AGENT GRID
+    let agentHtml = '<div class="bb-agent-grid" id="agentGrid">';
+    d.debate.phase1_reports.forEach((a, i) => {
+        const stanceClass = a.overall_stance === 'OVERWEIGHT' ? 'stance-overweight' :
+                           a.overall_stance === 'UNDERWEIGHT' ? 'stance-underweight' : 'stance-neutral';
+        const points = a.key_points.map(p => `<li>${p}</li>`).join('');
+        agentHtml += `
+        <div class="bb-agent-card" data-idx="${i}" onclick="toggleAgent(this)">
+            <div class="bb-agent-header">
+                <span class="bb-agent-name">${a.avatar} ${a.agent_name}</span>
+                <span class="bb-agent-stance ${stanceClass}">${a.overall_stance}</span>
+            </div>
+            <div class="bb-agent-conf">
+                CONF: <span>${a.confidence_score}%</span>
+                <span class="conf-bar"><span class="conf-bar-fill" style="width:${a.confidence_score}%"></span></span>
+            </div>
+            <ul class="bb-agent-points">${points}</ul>
+            <div class="bb-agent-detail">
+                <div style="color:#FF6600;font-size:9px;margin-bottom:4px;">ROLE: ${a.role}</div>
+                ${a.analysis}
+            </div>
+        </div>`;
+    });
+    agentHtml += '</div>';
+    app.innerHTML += agentHtml;
 
-            const ctx = document.getElementById('portfolio-donut').getContext('2d');
+    // CRITIQUES
+    let critHtml = `<div class="bb-critique-section">
+        <div class="bb-critique-title">CROSS-CRITIQUE LOG [PHASE 2]</div>
+        <div class="bb-critique-log">`;
+    d.debate.phase2_critiques.forEach(c => {
+        critHtml += `<div class="bb-critique-entry">
+            <span class="prompt">${c.from_agent}</span> <span style="color:#666">&rarr;</span> <span class="target">${c.to_agent}</span>
+            <div class="text">${c.critique}</div>
+        </div>`;
+    });
+    critHtml += '</div></div>';
+    app.innerHTML += critHtml;
 
-            this.donutChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: portfolio.map(p => `${p.ticker} (${p.weight}%)`),
-                    datasets: [{
-                        data: portfolio.map(p => p.weight),
-                        backgroundColor: CHART_COLORS.slice(0, portfolio.length).map(c => c + 'CC'),
-                        borderColor: '#0b0f19',
-                        borderWidth: 3,
-                        hoverBorderWidth: 0,
-                        hoverOffset: 8,
-                    }]
+    // KEY INSIGHTS
+    let insHtml = `<div class="bb-insights">
+        <div class="bb-insights-title">KEY INSIGHTS</div>
+        <div class="bb-insights-body">`;
+    d.verdict.key_insights.forEach(k => {
+        insHtml += `<div class="bb-insight-item">${k}</div>`;
+    });
+    insHtml += '</div></div>';
+    app.innerHTML += insHtml;
+
+    // RISK WARNINGS
+    let riskHtml = `<div class="bb-risk-bar">
+        <div class="bb-risk-title">&#9888; RISK WARNINGS</div>`;
+    d.verdict.risk_warnings.forEach(r => {
+        riskHtml += `<div class="bb-risk-item">${r}</div>`;
+    });
+    riskHtml += '</div>';
+    app.innerHTML += riskHtml;
+
+    // VERDICT SUMMARY
+    app.innerHTML += `
+    <div style="border:1px solid #333;margin-bottom:6px;padding:8px 10px;">
+        <div style="color:#FF6600;font-size:10px;letter-spacing:2px;margin-bottom:4px;">VERDICT SUMMARY</div>
+        <div style="color:#ccc;font-size:11px;line-height:1.6;">${d.verdict.summary}</div>
+    </div>`;
+
+    // DISCLAIMER
+    app.innerHTML += `
+    <div class="bb-disclaimer">
+        DISCLAIMER: This analysis is generated by AI agents for informational purposes only.
+        It does not constitute investment advice. Past performance does not guarantee future results.
+        Always consult a qualified financial advisor before making investment decisions.
+        Portfolio Council AI is not responsible for any losses incurred based on this analysis.
+        &copy; ${new Date().getFullYear()} Portfolio Council AI
+    </div>`;
+
+    // Remove loading
+    document.getElementById('loading')?.remove();
+}
+
+function drawDonut(d) {
+    const canvas = document.getElementById('donutChart');
+    if (!canvas) return;
+    const labels = [...d.portfolio.holdings.map(h=>h.ticker), 'CASH'];
+    const weights = [...d.portfolio.holdings.map(h=>h.weight), d.portfolio.cash_weight];
+    const colors = ['#FF6600','#FFFF00','#00FF00','#FF0000','#00CCFF','#FF00FF','#FFFFFF','#888888'];
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: weights,
+                backgroundColor: colors.slice(0, labels.length),
+                borderColor: '#000',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '55%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: '#ccc',
+                        font: { family: "Consolas, 'Courier New', monospace", size: 10 },
+                        padding: 6,
+                        boxWidth: 10,
+                        boxHeight: 10
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    cutout: '65%',
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1e293b',
-                            titleColor: '#f1f5f9',
-                            bodyColor: '#cbd5e1',
-                            borderColor: '#334155',
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            padding: 12,
-                            callbacks: {
-                                label: function(ctx) {
-                                    const item = portfolio[ctx.dataIndex];
-                                    return `${item.name}: ${item.weight}% (${item.sector})`;
-                                }
-                            }
-                        }
+                tooltip: {
+                    backgroundColor: '#111',
+                    titleColor: '#FF6600',
+                    bodyColor: '#FFF',
+                    borderColor: '#333',
+                    borderWidth: 1,
+                    titleFont: { family: "Consolas, monospace" },
+                    bodyFont: { family: "Consolas, monospace" },
+                    callbacks: {
+                        label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
                     }
                 }
-            });
-
-            // Custom legend
-            const legendContainer = document.getElementById('portfolio-legend');
-            legendContainer.innerHTML = portfolio.map((p, i) => `
-                <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-dark-700/50 transition-colors">
-                    <div class="w-3 h-3 rounded-full flex-shrink-0" style="background:${CHART_COLORS[i % CHART_COLORS.length]}"></div>
-                    <div class="min-w-0">
-                        <div class="text-sm font-semibold text-white">${p.ticker}</div>
-                        <div class="text-xs text-slate-400">${p.name}</div>
-                    </div>
-                    <div class="ml-auto text-sm font-mono font-semibold text-slate-300">${p.weight}%</div>
-                </div>
-            `).join('');
+            }
         }
-
-        renderAgents() {
-            const agents = this.data.agents || [];
-            const container = document.getElementById('agents-grid');
-
-            container.innerHTML = agents.map((agent, idx) => {
-                const stanceColor = STANCE_COLORS[agent.stance] || '#94a3b8';
-                const initials = agent.name.split(' ').map(w => w[0]).join('');
-
-                return `
-                <div class="bg-dark-800 rounded-2xl border border-dark-600/50 overflow-hidden hover:border-dark-500/70 transition-colors">
-                    <div class="p-5 cursor-pointer" onclick="toggleAgent('${agent.id}')">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 ${agent.avatar_class} rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-lg">
-                                ${initials}
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <h3 class="text-sm font-semibold text-white truncate">${agent.name}</h3>
-                                <span class="text-xs font-medium px-2 py-0.5 rounded-full"
-                                      style="color:${stanceColor}; background:${stanceColor}22">
-                                    ${agent.stance}
-                                </span>
-                            </div>
-                            <svg id="chevron-${agent.id}" class="w-5 h-5 text-slate-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-xs text-slate-400">Confidence</span>
-                                <span class="text-xs font-mono font-semibold" style="color:${stanceColor}">${agent.confidence}%</span>
-                            </div>
-                            <div class="confidence-bar">
-                                <div class="confidence-bar-fill" style="width:${agent.confidence}%; background:${stanceColor}"></div>
-                            </div>
-                        </div>
-
-                        <p class="text-xs text-slate-400 leading-relaxed line-clamp-3">${agent.summary}</p>
-                    </div>
-
-                    <div id="detail-${agent.id}" class="agent-detail border-t border-dark-600/50">
-                        <div class="p-5 bg-dark-700/30">
-                            <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Detailed Analysis</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">${agent.detail || agent.summary}</p>
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        renderChangesTable() {
-            const changes = this.data.weight_changes || [];
-            const tbody = document.getElementById('changes-table');
-
-            tbody.innerHTML = changes.map((c, i) => {
-                const diff = (c.after - c.before).toFixed(1);
-                const isPositive = c.after > c.before;
-                const arrow = isPositive ? '↑' : '↓';
-                const diffColor = isPositive ? 'text-green-400' : 'text-red-400';
-                const bgColor = i % 2 === 0 ? 'bg-dark-800/0' : 'bg-dark-700/20';
-
-                return `
-                <tr class="change-row ${bgColor} border-b border-dark-600/30">
-                    <td class="py-3 px-4">
-                        <span class="font-mono font-semibold text-white">${c.ticker}</span>
-                    </td>
-                    <td class="py-3 px-4 font-mono text-slate-400">${c.before.toFixed(1)}%</td>
-                    <td class="py-3 px-4 text-center">
-                        <span class="text-lg ${diffColor}">${arrow}</span>
-                    </td>
-                    <td class="py-3 px-4 font-mono font-semibold text-white">${c.after.toFixed(1)}%</td>
-                    <td class="py-3 px-4 font-mono font-semibold ${diffColor}">
-                        ${isPositive ? '+' : ''}${diff}%
-                    </td>
-                    <td class="py-3 px-4 text-xs text-slate-400 max-w-xs">${c.reason}</td>
-                </tr>
-                `;
-            }).join('');
-        }
-
-        renderDebateChat() {
-            const debates = this.data.debates || [];
-            const container = document.getElementById('debate-chat');
-
-            container.innerHTML = debates.map((d, i) => {
-                const isLeft = i % 2 === 0;
-                return `
-                <div class="flex ${isLeft ? '' : 'flex-row-reverse'} items-start gap-3">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                         style="background:${d.color_from}">
-                        ${d.from.split(' ').map(w => w[0]).join('').substring(0,2)}
-                    </div>
-                    <div class="max-w-md">
-                        <div class="flex items-center gap-2 mb-1 ${isLeft ? '' : 'flex-row-reverse'}">
-                            <span class="text-xs font-semibold" style="color:${d.color_from}">${d.from}</span>
-                            <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                            </svg>
-                            <span class="text-xs font-semibold" style="color:${d.color_to}">${d.to}</span>
-                        </div>
-                        <div class="chat-bubble ${isLeft ? 'chat-from bg-dark-700' : 'chat-to bg-dark-700/60 border border-dark-600/30'}">
-                            <p class="text-xs text-slate-300 leading-relaxed">${d.text}</p>
-                        </div>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-    }
-
-    // ============================================================
-    // TOGGLE AGENT DETAIL
-    // ============================================================
-    function toggleAgent(agentId) {
-        const detail = document.getElementById(`detail-${agentId}`);
-        const chevron = document.getElementById(`chevron-${agentId}`);
-        const isExpanded = detail.classList.contains('expanded');
-
-        // Close all
-        document.querySelectorAll('.agent-detail').forEach(el => el.classList.remove('expanded'));
-        document.querySelectorAll('[id^="chevron-"]').forEach(el => el.style.transform = '');
-
-        if (!isExpanded) {
-            detail.classList.add('expanded');
-            chevron.style.transform = 'rotate(180deg)';
-        }
-    }
-
-    // ============================================================
-    // DATA LOADING
-    // ============================================================
-    async function loadData() {
-        try {
-            const res = await fetch('data/latest_analysis.json');
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const json = await res.json();
-            console.log('[Portfolio Council AI] Loaded live data');
-            return json;
-        } catch (e) {
-            console.warn('[Portfolio Council AI] No live data, using demo:', e.message);
-            return DEMO_DATA;
-        }
-    }
-
-    // ============================================================
-    // INIT
-    // ============================================================
-    loadData().then(data => {
-        new Dashboard(data);
     });
-    </script>
+}
+
+function toggleAgent(el) {
+    const grid = document.getElementById('agentGrid');
+    const wasExpanded = el.classList.contains('expanded');
+    grid.querySelectorAll('.bb-agent-card').forEach(c => c.classList.remove('expanded'));
+    if (!wasExpanded) el.classList.add('expanded');
+}
+
+// Clock
+function updateClock() {
+    const now = new Date();
+    const t = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    document.getElementById('status-clock').textContent = t;
+    document.getElementById('hdr-time').textContent = t;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// INIT
+loadData();
+</script>
 </body>
 </html>

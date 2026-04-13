@@ -3,137 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Editor — Portfolio Council AI</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>PORTFOLIO EDITOR | Portfolio Council AI</title>
 <style>
-body{background:#0f1117;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-.card{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:20px}
-input,select{background:#2a2d3e;border:1px solid #3a3d4e;color:#e2e8f0;border-radius:8px;padding:8px 12px;width:100%}
-input:focus,select:focus{outline:none;border-color:#3b82f6}
-button{cursor:pointer;transition:all 0.2s}
-.btn-primary{background:#3b82f6;color:white;padding:10px 20px;border-radius:8px;border:none;font-weight:600}
-.btn-primary:hover{background:#2563eb}
-.btn-danger{background:#ef444422;color:#ef4444;padding:6px 12px;border-radius:6px;border:1px solid #ef444444;font-size:0.8rem}
-.btn-danger:hover{background:#ef444444}
-.weight-bar{height:8px;background:#2a2d3e;border-radius:4px;overflow:hidden;margin-top:4px}
-.weight-fill{height:100%;background:#3b82f6;border-radius:4px;transition:width 0.3s}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#000;--panel:#0a0a0a;--border:#333;--text:#ccc;--bright:#fff;--orange:#ff6600;--green:#00cc00;--red:#ff3333;--yellow:#ffcc00;--blue:#3399ff;--dim:#666}
+body{font-family:Consolas,'Courier New',monospace;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+.top-bar{background:var(--orange);color:#000;padding:4px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px}
+.top-bar a{color:#000;text-decoration:none;margin-left:16px;font-weight:400}
+.top-bar a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:12px}
+.section{border:1px solid var(--border);margin-bottom:8px}
+.section-hdr{background:#111;padding:6px 10px;border-bottom:1px solid var(--border);color:var(--orange);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
+.section-body{padding:10px}
+.row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.field{flex:1;min-width:120px}
+.field label{display:block;font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:2px}
+input,select{background:#111;border:1px solid var(--border);color:var(--bright);padding:6px 8px;width:100%;font-family:inherit;font-size:13px}
+input:focus,select:focus{outline:none;border-color:var(--orange)}
+.btn{background:#111;border:1px solid var(--border);color:var(--orange);padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}
+.btn:hover{background:#222;border-color:var(--orange)}
+.btn-action{background:var(--orange);color:#000;border:none}
+.btn-action:hover{background:#ff8800}
+.btn-del{color:var(--red);border-color:#661111}
+.btn-del:hover{background:#220000}
+.holding-row{display:grid;grid-template-columns:1fr 1fr 90px 70px 100px 80px 40px;gap:4px;padding:4px 0;border-bottom:1px solid #1a1a1a;align-items:center}
+.holding-hdr{color:var(--dim);font-size:10px;text-transform:uppercase;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.total-bar{background:#111;border:1px solid var(--border);padding:8px 10px;margin-top:6px}
+.total-bar .lbl{color:var(--dim);font-size:11px}
+.total-bar .val{color:var(--bright);font-weight:700;font-size:15px}
+.bar{height:4px;background:#222;margin-top:4px}
+.bar-fill{height:100%;background:var(--orange);transition:width 0.3s}
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.agent-item{background:#0a0a0a;border:1px solid var(--border);padding:8px}
+.agent-item .name{color:var(--orange);font-weight:700;font-size:12px;margin-bottom:4px}
+.agent-item .desc{color:var(--dim);font-size:10px;margin-bottom:6px}
+.agent-item input[type=range]{width:100%;accent-color:var(--orange)}
+.agent-val{text-align:right;font-weight:700;color:var(--bright);font-size:14px}
+.actions{display:flex;gap:8px;margin:12px 0}
+.actions .btn{flex:1;text-align:center;padding:10px}
+.note{text-align:center;color:var(--dim);font-size:11px;margin-top:8px}
+@media(max-width:700px){.holding-row{grid-template-columns:1fr 1fr 70px 60px;font-size:11px}.agent-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="max-w-3xl mx-auto p-4">
-  <header class="flex justify-between items-center py-4 border-b border-gray-700 mb-6">
-    <div>
-      <h1 class="text-xl font-bold" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">📝 Portfolio Editor</h1>
-      <a href="index.html" class="text-sm text-blue-400 hover:underline">← 대시보드로 돌아가기</a>
-    </div>
-  </header>
+<div class="top-bar">
+  <span>PORTFOLIO COUNCIL AI — EDITOR</span>
+  <div>
+    <a href="index.html">DASHBOARD</a>
+    <a href="history.html">HISTORY</a>
+    <a href="accuracy.html">ACCURACY</a>
+    <a href="dev-status.html">DEV</a>
+  </div>
+</div>
+<div class="container">
 
-  <div class="card mb-4">
-    <h2 class="font-semibold mb-3">포트폴리오 기본 정보</h2>
-    <div class="grid grid-cols-2 gap-4">
-      <div><label class="text-xs text-gray-400">이름</label><input id="pName" value="my_portfolio"></div>
-      <div><label class="text-xs text-gray-400">기준 통화</label>
-        <select id="pCurrency"><option value="KRW">KRW</option><option value="USD">USD</option></select>
-      </div>
-      <div><label class="text-xs text-gray-400">현금 비중 (%)</label><input id="pCash" type="number" value="10" min="0" max="100"></div>
+<div class="section">
+  <div class="section-hdr">Portfolio Info</div>
+  <div class="section-body">
+    <div class="row">
+      <div class="field"><label>Name</label><input id="pName" value="my_portfolio"></div>
+      <div class="field"><label>Currency</label><select id="pCurrency"><option value="KRW">KRW</option><option value="USD">USD</option></select></div>
+      <div class="field"><label>Cash Weight %</label><input id="pCash" type="number" value="10" min="0" max="100"></div>
     </div>
   </div>
+</div>
 
-  <div class="card mb-4">
-    <div class="flex justify-between items-center mb-3">
-      <h2 class="font-semibold">보유 종목</h2>
-      <button class="btn-primary text-sm" onclick="addHolding()">+ 종목 추가</button>
-    </div>
+<div class="section">
+  <div class="section-hdr">Holdings <span style="float:right"><button class="btn" onclick="addHolding()">+ ADD</button></span></div>
+  <div class="section-body">
+    <div class="holding-row holding-hdr"><span>Ticker</span><span>Name</span><span>Market</span><span>Weight%</span><span>Sector</span><span>AvgPrice</span><span></span></div>
     <div id="holdings"></div>
-    <div class="mt-4 p-3 rounded-lg" style="background:#2a2d3e">
-      <div class="flex justify-between text-sm">
-        <span>종목 비중 합계</span>
-        <span id="totalWeight" class="font-bold">0%</span>
-      </div>
-      <div class="weight-bar mt-2"><div id="totalBar" class="weight-fill"></div></div>
-      <div class="flex justify-between text-sm mt-1">
-        <span>현금 포함 합계</span>
-        <span id="grandTotal" class="font-bold">0%</span>
-      </div>
+    <div class="total-bar">
+      <div style="display:flex;justify-content:space-between"><span class="lbl">HOLDINGS TOTAL</span><span class="val" id="totalWeight">0%</span></div>
+      <div class="bar"><div id="totalBar" class="bar-fill" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px"><span class="lbl">GRAND TOTAL (+ CASH)</span><span class="val" id="grandTotal">0%</span></div>
     </div>
   </div>
+</div>
 
-  <div class="card mb-4">
-    <h2 class="font-semibold mb-3">투자 제약 조건</h2>
-    <div class="grid grid-cols-2 gap-4">
-      <div><label class="text-xs text-gray-400">단일 종목 최대 (%)</label><input id="cStock" type="number" value="30"></div>
-      <div><label class="text-xs text-gray-400">단일 섹터 최대 (%)</label><input id="cSector" type="number" value="50"></div>
-      <div><label class="text-xs text-gray-400">크립토 최대 (%)</label><input id="cCrypto" type="number" value="15"></div>
-      <div><label class="text-xs text-gray-400">최소 현금 (%)</label><input id="cCash" type="number" value="5"></div>
+<div class="section">
+  <div class="section-hdr">Constraints</div>
+  <div class="section-body">
+    <div class="row">
+      <div class="field"><label>Max Single Stock %</label><input id="cStock" type="number" value="30"></div>
+      <div class="field"><label>Max Sector %</label><input id="cSector" type="number" value="50"></div>
+      <div class="field"><label>Max Crypto %</label><input id="cCrypto" type="number" value="15"></div>
+      <div class="field"><label>Min Cash %</label><input id="cCash" type="number" value="5"></div>
     </div>
   </div>
+</div>
 
-  <div class="card mb-4">
-    <h2 class="font-semibold mb-3">에이전트 가중치 <span class="text-xs text-gray-400 font-normal">(각 에이전트의 투표 영향력 조정)</span></h2>
-    <div class="grid grid-cols-3 gap-3" id="agentWeights"></div>
-    <div class="mt-3 text-xs text-gray-500">1.0 = 기본, 1.5 = 50% 가중, 0.5 = 50% 감소, 0 = 투표 제외</div>
+<div class="section">
+  <div class="section-hdr">Agent Weights</div>
+  <div class="section-body">
+    <div class="agent-grid" id="agentWeights"></div>
+    <div class="note" style="margin-top:6px">1.0 = default · 1.5 = +50% influence · 0.5 = -50% · 0 = excluded</div>
   </div>
+</div>
 
-  <div class="flex gap-3 mb-8">
-    <button class="btn-primary flex-1" onclick="downloadJSON()">📥 portfolio.json 다운로드</button>
-    <button class="btn-primary flex-1" style="background:#8b5cf6" onclick="copyJSON()">📋 JSON 복사</button>
-  </div>
-
-  <div class="text-center text-xs text-gray-500 mb-4">
-    다운로드한 portfolio.json을 레포의 data/ 폴더에 커밋하면 자동으로 분석이 실행됩니다.
-  </div>
+<div class="actions">
+  <button class="btn btn-action" onclick="downloadJSON()">⬇ DOWNLOAD JSON</button>
+  <button class="btn btn-action" onclick="copyJSON()">📋 COPY JSON</button>
+</div>
+<div class="note">Commit portfolio.json to data/ folder to trigger analysis.</div>
 </div>
 
 <script>
 let holdings=[];
-const SECTORS=["Technology","Healthcare","Finance","Energy","Consumer","Industrial","Materials","Utilities","Real Estate","Communication","Crypto","Bond","Other"];
+const SECTORS=["Technology","Healthcare","Finance","Energy","Consumer","Industrial","Materials","Utilities","RealEstate","Communication","Crypto","Bond","Other"];
 const MARKETS=["NASDAQ","NYSE","KRX","Crypto","Other"];
-const AGENTS=[
-  {key:"퀀트",avatar:"🔢",desc:"기술적 지표·팩터"},
-  {key:"매크로",avatar:"🌍",desc:"거시경제·금리"},
-  {key:"섹터",avatar:"🏭",desc:"섹터 로테이션"},
-  {key:"사이클",avatar:"🔄",desc:"시장 타이밍"},
-  {key:"크립토",avatar:"₿",desc:"암호화폐·DeFi"},
-  {key:"가치투자자",avatar:"📚",desc:"밸류에이션"},
-];
-let agentWeights={};
-AGENTS.forEach(a=>agentWeights[a.key]=1.0);
+const AGENTS=[{key:"퀀트",avatar:"QNT",desc:"Technical/Factor"},{key:"매크로",avatar:"MAC",desc:"Macro/Rates"},{key:"섹터",avatar:"SEC",desc:"Sector Rotation"},{key:"사이클",avatar:"CYC",desc:"Market Cycle"},{key:"크립토",avatar:"CRY",desc:"Crypto/DeFi"},{key:"가치투자자",avatar:"VAL",desc:"Value/DCF"}];
+let agentWeights={};AGENTS.forEach(a=>agentWeights[a.key]=1.0);
 
-function renderAgentWeights(){
-  document.getElementById("agentWeights").innerHTML=AGENTS.map(a=>`
-    <div class="p-3 rounded-lg" style="background:#2a2d3e">
-      <div class="flex items-center gap-2 mb-2">
-        <span>${a.avatar}</span>
-        <span class="text-sm font-semibold">${a.key}</span>
-      </div>
-      <div class="text-xs text-gray-400 mb-2">${a.desc}</div>
-      <div class="flex items-center gap-2">
-        <input type="range" min="0" max="2" step="0.1" value="${agentWeights[a.key]}"
-          style="flex:1;accent-color:#6366f1"
-          oninput="agentWeights['${a.key}']=+this.value;this.nextElementSibling.textContent=this.value+'x'">
-        <span class="text-sm font-mono" style="width:36px;text-align:right">${agentWeights[a.key]}x</span>
-      </div>
-    </div>`).join('');
-}
-
-function addHolding(h){
-  holdings.push(h||{ticker:"",name:"",market:"NASDAQ",weight:0,avg_price:null,sector:"Technology"});
-  renderHoldings();
-}
-
+function addHolding(h){holdings.push(h||{ticker:"",name:"",market:"NASDAQ",weight:0,avg_price:null,sector:"Technology"});renderHoldings();}
 function removeHolding(i){holdings.splice(i,1);renderHoldings();}
 
 function renderHoldings(){
-  const el=document.getElementById("holdings");
-  el.innerHTML=holdings.map((h,i)=>`
-    <div class="grid gap-2 mb-3 p-3 rounded-lg" style="background:#2a2d3e;grid-template-columns:1fr 1fr 100px 100px 120px 100px auto">
-      <input placeholder="티커" value="${h.ticker}" onchange="holdings[${i}].ticker=this.value">
-      <input placeholder="종목명" value="${h.name}" onchange="holdings[${i}].name=this.value">
+  document.getElementById("holdings").innerHTML=holdings.map((h,i)=>`
+    <div class="holding-row">
+      <input value="${h.ticker}" onchange="holdings[${i}].ticker=this.value" placeholder="AAPL">
+      <input value="${h.name}" onchange="holdings[${i}].name=this.value" placeholder="Apple Inc.">
       <select onchange="holdings[${i}].market=this.value">${MARKETS.map(m=>`<option${m===h.market?' selected':''}>${m}</option>`).join('')}</select>
-      <input type="number" placeholder="비중%" value="${h.weight||''}" min="0" max="100" onchange="holdings[${i}].weight=+this.value;updateTotals()">
+      <input type="number" value="${h.weight||''}" min="0" max="100" onchange="holdings[${i}].weight=+this.value;updateTotals()" placeholder="0">
       <select onchange="holdings[${i}].sector=this.value">${SECTORS.map(s=>`<option${s===h.sector?' selected':''}>${s}</option>`).join('')}</select>
-      <input type="number" placeholder="평단가" value="${h.avg_price||''}" onchange="holdings[${i}].avg_price=+this.value||null">
-      <button class="btn-danger" onclick="removeHolding(${i})">✕</button>
+      <input type="number" value="${h.avg_price||''}" onchange="holdings[${i}].avg_price=+this.value||null" placeholder="0">
+      <button class="btn btn-del" onclick="removeHolding(${i})">✕</button>
     </div>`).join('');
   updateTotals();
 }
@@ -141,68 +135,38 @@ function renderHoldings(){
 function updateTotals(){
   const sum=holdings.reduce((a,h)=>a+(h.weight||0),0);
   const cash=+(document.getElementById("pCash").value)||0;
-  document.getElementById("totalWeight").textContent=sum+"%";
-  document.getElementById("totalWeight").style.color=sum>100?"#ef4444":"#e2e8f0";
+  const tw=document.getElementById("totalWeight");
+  tw.textContent=sum+"%";tw.style.color=sum>100?'var(--red)':'var(--bright)';
   document.getElementById("totalBar").style.width=Math.min(sum,100)+"%";
-  document.getElementById("totalBar").style.background=sum>100?"#ef4444":"#3b82f6";
-  document.getElementById("grandTotal").textContent=(sum+cash)+"%";
-  document.getElementById("grandTotal").style.color=(sum+cash)>100?"#ef4444":(sum+cash)===100?"#22c55e":"#eab308";
+  document.getElementById("totalBar").style.background=sum>100?'var(--red)':'var(--orange)';
+  const gt=document.getElementById("grandTotal");
+  gt.textContent=(sum+cash)+"%";gt.style.color=(sum+cash)>100?'var(--red)':(sum+cash)===100?'var(--green)':'var(--yellow)';
+}
+
+function renderAgentWeights(){
+  document.getElementById("agentWeights").innerHTML=AGENTS.map(a=>`
+    <div class="agent-item">
+      <div class="name">${a.avatar} ${a.key}</div>
+      <div class="desc">${a.desc}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="range" min="0" max="2" step="0.1" value="${agentWeights[a.key]}"
+          oninput="agentWeights['${a.key}']=+this.value;this.nextElementSibling.textContent=this.value+'x'">
+        <span class="agent-val">${agentWeights[a.key]}x</span>
+      </div>
+    </div>`).join('');
 }
 
 function buildJSON(){
-  return JSON.stringify({
-    name:document.getElementById("pName").value,
-    updated_at:new Date().toISOString().split("T")[0],
-    base_currency:document.getElementById("pCurrency").value,
-    cash_weight:+(document.getElementById("pCash").value)||0,
-    holdings:holdings.filter(h=>h.ticker).map(h=>({ticker:h.ticker,name:h.name,market:h.market,weight:h.weight||0,avg_price:h.avg_price,sector:h.sector})),
-    constraints:{max_single_stock_weight:+document.getElementById("cStock").value,max_sector_weight:+document.getElementById("cSector").value,max_crypto_weight:+document.getElementById("cCrypto").value,min_cash_weight:+document.getElementById("cCash").value},
-    agent_weights:{...agentWeights}
-  },null,2);
+  return JSON.stringify({name:document.getElementById("pName").value,updated_at:new Date().toISOString().split("T")[0],base_currency:document.getElementById("pCurrency").value,cash_weight:+(document.getElementById("pCash").value)||0,holdings:holdings.filter(h=>h.ticker).map(h=>({ticker:h.ticker,name:h.name,market:h.market,weight:h.weight||0,avg_price:h.avg_price,sector:h.sector})),constraints:{max_single_stock_weight:+document.getElementById("cStock").value,max_sector_weight:+document.getElementById("cSector").value,max_crypto_weight:+document.getElementById("cCrypto").value,min_cash_weight:+document.getElementById("cCash").value},agent_weights:{...agentWeights}},null,2);
 }
 
-function downloadJSON(){
-  const blob=new Blob([buildJSON()],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="portfolio.json";
-  a.click();
-}
+function downloadJSON(){const b=new Blob([buildJSON()],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="portfolio.json";a.click();}
+function copyJSON(){navigator.clipboard.writeText(buildJSON()).then(()=>alert("Copied to clipboard"));}
 
-function copyJSON(){
-  navigator.clipboard.writeText(buildJSON()).then(()=>alert("JSON이 클립보드에 복사되었습니다!"));
-}
-
-// 초기 데이터 로드 시도
 fetch("data/latest_analysis.json").then(r=>r.ok?r.json():null).then(data=>{
-  if(data&&data.portfolio){
-    const p=data.portfolio;
-    document.getElementById("pName").value=p.name||"";
-    document.getElementById("pCash").value=p.cash_weight||10;
-    if(p.base_currency)document.getElementById("pCurrency").value=p.base_currency;
-    if(p.constraints){
-      document.getElementById("cStock").value=p.constraints.max_single_stock_weight||30;
-      document.getElementById("cSector").value=p.constraints.max_sector_weight||50;
-      document.getElementById("cCrypto").value=p.constraints.max_crypto_weight||15;
-      document.getElementById("cCash").value=p.constraints.min_cash_weight||5;
-    }
-    holdings=(p.holdings||[]).map(h=>({...h}));
-    if(p.agent_weights){
-      Object.assign(agentWeights,p.agent_weights);
-    }
-    renderHoldings();
-    renderAgentWeights();
-  }else{
-    // 샘플 데이터
-    holdings=[
-      {ticker:"005930.KS",name:"삼성전자",market:"KRX",weight:25,sector:"Technology",avg_price:67000},
-      {ticker:"AAPL",name:"Apple",market:"NASDAQ",weight:15,sector:"Technology",avg_price:195.5},
-    ];
-    renderHoldings();
-    renderAgentWeights();
-  }
+  if(data&&data.portfolio){const p=data.portfolio;document.getElementById("pName").value=p.name||"";document.getElementById("pCash").value=p.cash_weight||10;if(p.base_currency)document.getElementById("pCurrency").value=p.base_currency;if(p.constraints){document.getElementById("cStock").value=p.constraints.max_single_stock_weight||30;document.getElementById("cSector").value=p.constraints.max_sector_weight||50;document.getElementById("cCrypto").value=p.constraints.max_crypto_weight||15;document.getElementById("cCash").value=p.constraints.min_cash_weight||5;}if(p.agent_weights)Object.assign(agentWeights,p.agent_weights);holdings=(p.holdings||[]).map(h=>({...h}));renderHoldings();renderAgentWeights();}
+  else{holdings=[{ticker:"005930.KS",name:"삼성전자",market:"KRX",weight:25,sector:"Technology",avg_price:67000},{ticker:"AAPL",name:"Apple",market:"NASDAQ",weight:15,sector:"Technology",avg_price:195.5}];renderHoldings();renderAgentWeights();}
 }).catch(()=>{addHolding();renderAgentWeights();});
-
 document.getElementById("pCash").addEventListener("input",updateTotals);
 </script>
 </body>
