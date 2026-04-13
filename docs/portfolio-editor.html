@@ -3,170 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PORTFOLIO EDITOR | Portfolio Council AI</title>
+<title>Portfolio Editor | Portfolio Council AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#000;--panel:#0a0a0a;--border:#333;--text:#ccc;--bright:#fff;--orange:#ff6600;--green:#00cc00;--red:#ff3333;--yellow:#ffcc00;--blue:#3399ff;--dim:#666}
-body{font-family:Consolas,'Courier New',monospace;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
-.top-bar{background:var(--orange);color:#000;padding:4px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px}
-.top-bar a{color:#000;text-decoration:none;margin-left:16px;font-weight:400}
-.top-bar a:hover{text-decoration:underline}
-.container{max-width:900px;margin:0 auto;padding:12px}
-.section{border:1px solid var(--border);margin-bottom:8px}
-.section-hdr{background:#111;padding:6px 10px;border-bottom:1px solid var(--border);color:var(--orange);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
-.section-body{padding:10px}
-.row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.field{flex:1;min-width:120px}
-.field label{display:block;font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:2px}
-input,select{background:#111;border:1px solid var(--border);color:var(--bright);padding:6px 8px;width:100%;font-family:inherit;font-size:13px}
-input:focus,select:focus{outline:none;border-color:var(--orange)}
-.btn{background:#111;border:1px solid var(--border);color:var(--orange);padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700}
-.btn:hover{background:#222;border-color:var(--orange)}
-.btn-action{background:var(--orange);color:#000;border:none}
-.btn-action:hover{background:#ff8800}
-.btn-del{color:var(--red);border-color:#661111}
-.btn-del:hover{background:#220000}
-.holding-row{display:grid;grid-template-columns:1fr 1fr 90px 70px 100px 80px 40px;gap:4px;padding:4px 0;border-bottom:1px solid #1a1a1a;align-items:center}
-.holding-hdr{color:var(--dim);font-size:10px;text-transform:uppercase;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--border)}
-.total-bar{background:#111;border:1px solid var(--border);padding:8px 10px;margin-top:6px}
-.total-bar .lbl{color:var(--dim);font-size:11px}
-.total-bar .val{color:var(--bright);font-weight:700;font-size:15px}
-.bar{height:4px;background:#222;margin-top:4px}
-.bar-fill{height:100%;background:var(--orange);transition:width 0.3s}
-.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.agent-item{background:#0a0a0a;border:1px solid var(--border);padding:8px}
-.agent-item .name{color:var(--orange);font-weight:700;font-size:12px;margin-bottom:4px}
-.agent-item .desc{color:var(--dim);font-size:10px;margin-bottom:6px}
-.agent-item input[type=range]{width:100%;accent-color:var(--orange)}
-.agent-val{text-align:right;font-weight:700;color:var(--bright);font-size:14px}
-.actions{display:flex;gap:8px;margin:12px 0}
-.actions .btn{flex:1;text-align:center;padding:10px}
-.note{text-align:center;color:var(--dim);font-size:11px;margin-top:8px}
-@media(max-width:700px){.holding-row{grid-template-columns:1fr 1fr 70px 60px;font-size:11px}.agent-grid{grid-template-columns:1fr 1fr}}
+body{font-family:'Inter',sans-serif;background:#f8f9fb;color:#1e293b;font-size:14px;line-height:1.6}
+.nav{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.nav-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4f6ef7,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#64748b;text-decoration:none;transition:all 0.15s}
+.nav-links a:hover,.nav-links a.active{background:#f1f5f9;color:#4f6ef7}
+.container{max-width:800px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-bottom:16px}
+.card-hdr{font-size:15px;font-weight:600;color:#334155;margin-bottom:14px}
+.row{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.field{flex:1;min-width:140px}
+.field label{display:block;font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;margin-bottom:3px}
+input,select{background:#f8f9fb;border:1px solid #e5e7eb;color:#1e293b;border-radius:8px;padding:8px 12px;width:100%;font-family:inherit;font-size:13px}
+input:focus,select:focus{outline:none;border-color:#4f6ef7;box-shadow:0 0 0 3px #4f6ef722}
+.btn{border:none;padding:8px 18px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.btn-primary{background:#4f6ef7;color:#fff}.btn-primary:hover{background:#4338ca}
+.btn-outline{background:#fff;border:1px solid #e5e7eb;color:#64748b}.btn-outline:hover{border-color:#4f6ef7;color:#4f6ef7}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}.btn-danger:hover{background:#fee2e2}
+.holding-row{display:grid;grid-template-columns:1fr 1fr 90px 70px 100px 80px 36px;gap:6px;padding:6px 0;border-bottom:1px solid #f1f5f9;align-items:center}
+.holding-hdr{font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:600;padding-bottom:6px;border-bottom:2px solid #f1f5f9}
+.total-box{background:#f8f9fb;border-radius:10px;padding:12px;margin-top:10px}
+.total-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.total-val{font-weight:700;font-size:16px}
+.bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin:4px 0}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.3s}
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.agent-item{background:#f8f9fb;border:1px solid #e5e7eb;border-radius:10px;padding:12px}
+.agent-name{font-weight:600;font-size:13px;margin-bottom:2px}
+.agent-desc{font-size:11px;color:#94a3b8;margin-bottom:8px}
+.agent-val{text-align:right;font-weight:700;font-size:14px;color:#4f6ef7}
+input[type=range]{accent-color:#4f6ef7}
+.actions{display:flex;gap:10px;margin:16px 0}
+.actions .btn{flex:1;padding:12px;text-align:center;font-size:14px}
+.note{text-align:center;color:#94a3b8;font-size:12px;margin-top:8px}
+@media(max-width:700px){.holding-row{grid-template-columns:1fr 1fr 70px 60px}.agent-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="top-bar">
-  <span>PORTFOLIO COUNCIL AI — EDITOR</span>
-  <div>
-    <a href="index.html">DASHBOARD</a>
-    <a href="history.html">HISTORY</a>
-    <a href="accuracy.html">ACCURACY</a>
-    <a href="dev-status.html">DEV</a>
-  </div>
+<div class="nav">
+  <div class="nav-brand"><div class="nav-icon">P</div> Portfolio Council AI</div>
+  <div class="nav-links"><a href="index.html">Dashboard</a><a href="portfolio-editor.html" class="active">Editor</a><a href="history.html">History</a><a href="accuracy.html">Accuracy</a></div>
 </div>
 <div class="container">
-
-<div class="section">
-  <div class="section-hdr">Portfolio Info</div>
-  <div class="section-body">
-    <div class="row">
-      <div class="field"><label>Name</label><input id="pName" value="my_portfolio"></div>
-      <div class="field"><label>Currency</label><select id="pCurrency"><option value="KRW">KRW</option><option value="USD">USD</option></select></div>
-      <div class="field"><label>Cash Weight %</label><input id="pCash" type="number" value="10" min="0" max="100"></div>
-    </div>
+<div class="card"><div class="card-hdr">📝 Portfolio Info</div>
+  <div class="row"><div class="field"><label>Name</label><input id="pName" value="my_portfolio"></div><div class="field"><label>Currency</label><select id="pCurrency"><option value="KRW">KRW</option><option value="USD">USD</option></select></div><div class="field"><label>Cash Weight %</label><input id="pCash" type="number" value="10" min="0" max="100"></div></div>
+</div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="card-hdr" style="margin:0">📈 Holdings</div><button class="btn btn-outline" onclick="addHolding()">+ Add</button></div>
+  <div class="holding-row holding-hdr"><span>Ticker</span><span>Name</span><span>Market</span><span>Weight%</span><span>Sector</span><span>Avg Price</span><span></span></div>
+  <div id="holdings"></div>
+  <div class="total-box">
+    <div class="total-row"><span style="color:#94a3b8">Holdings total</span><span class="total-val" id="totalWeight">0%</span></div>
+    <div class="bar"><div id="totalBar" class="bar-fill" style="width:0%"></div></div>
+    <div class="total-row" style="margin-top:6px"><span style="color:#94a3b8">Grand total (+ cash)</span><span class="total-val" id="grandTotal">0%</span></div>
   </div>
 </div>
-
-<div class="section">
-  <div class="section-hdr">Holdings <span style="float:right"><button class="btn" onclick="addHolding()">+ ADD</button></span></div>
-  <div class="section-body">
-    <div class="holding-row holding-hdr"><span>Ticker</span><span>Name</span><span>Market</span><span>Weight%</span><span>Sector</span><span>AvgPrice</span><span></span></div>
-    <div id="holdings"></div>
-    <div class="total-bar">
-      <div style="display:flex;justify-content:space-between"><span class="lbl">HOLDINGS TOTAL</span><span class="val" id="totalWeight">0%</span></div>
-      <div class="bar"><div id="totalBar" class="bar-fill" style="width:0%"></div></div>
-      <div style="display:flex;justify-content:space-between;margin-top:4px"><span class="lbl">GRAND TOTAL (+ CASH)</span><span class="val" id="grandTotal">0%</span></div>
-    </div>
-  </div>
+<div class="card"><div class="card-hdr">⚙️ Constraints</div>
+  <div class="row"><div class="field"><label>Max Single Stock %</label><input id="cStock" type="number" value="30"></div><div class="field"><label>Max Sector %</label><input id="cSector" type="number" value="50"></div><div class="field"><label>Max Crypto %</label><input id="cCrypto" type="number" value="15"></div><div class="field"><label>Min Cash %</label><input id="cCash" type="number" value="5"></div></div>
 </div>
-
-<div class="section">
-  <div class="section-hdr">Constraints</div>
-  <div class="section-body">
-    <div class="row">
-      <div class="field"><label>Max Single Stock %</label><input id="cStock" type="number" value="30"></div>
-      <div class="field"><label>Max Sector %</label><input id="cSector" type="number" value="50"></div>
-      <div class="field"><label>Max Crypto %</label><input id="cCrypto" type="number" value="15"></div>
-      <div class="field"><label>Min Cash %</label><input id="cCash" type="number" value="5"></div>
-    </div>
-  </div>
+<div class="card"><div class="card-hdr">🤖 Agent Weights</div><div class="agent-grid" id="agentWeights"></div><div class="note" style="margin-top:8px">1.0 = default · 1.5 = +50% influence · 0 = excluded from voting</div></div>
+<div class="actions"><button class="btn btn-primary" onclick="downloadJSON()">⬇ Download JSON</button><button class="btn btn-primary" style="background:#a855f7" onclick="copyJSON()">📋 Copy JSON</button></div>
+<div class="note">Commit the downloaded portfolio.json to your repo's <code>data/</code> folder to trigger analysis.</div>
 </div>
-
-<div class="section">
-  <div class="section-hdr">Agent Weights</div>
-  <div class="section-body">
-    <div class="agent-grid" id="agentWeights"></div>
-    <div class="note" style="margin-top:6px">1.0 = default · 1.5 = +50% influence · 0.5 = -50% · 0 = excluded</div>
-  </div>
-</div>
-
-<div class="actions">
-  <button class="btn btn-action" onclick="downloadJSON()">⬇ DOWNLOAD JSON</button>
-  <button class="btn btn-action" onclick="copyJSON()">📋 COPY JSON</button>
-</div>
-<div class="note">Commit portfolio.json to data/ folder to trigger analysis.</div>
-</div>
-
 <script>
 let holdings=[];
 const SECTORS=["Technology","Healthcare","Finance","Energy","Consumer","Industrial","Materials","Utilities","RealEstate","Communication","Crypto","Bond","Other"];
 const MARKETS=["NASDAQ","NYSE","KRX","Crypto","Other"];
-const AGENTS=[{key:"퀀트",avatar:"QNT",desc:"Technical/Factor"},{key:"매크로",avatar:"MAC",desc:"Macro/Rates"},{key:"섹터",avatar:"SEC",desc:"Sector Rotation"},{key:"사이클",avatar:"CYC",desc:"Market Cycle"},{key:"크립토",avatar:"CRY",desc:"Crypto/DeFi"},{key:"가치투자자",avatar:"VAL",desc:"Value/DCF"}];
+const AGENTS=[{key:"퀀트",emoji:"🔢",desc:"Technical / Factor"},{key:"매크로",emoji:"🌍",desc:"Macro / Rates"},{key:"섹터",emoji:"🏭",desc:"Sector Rotation"},{key:"사이클",emoji:"🔄",desc:"Market Cycle"},{key:"크립토",emoji:"₿",desc:"Crypto / DeFi"},{key:"가치투자자",emoji:"📚",desc:"Value / DCF"}];
 let agentWeights={};AGENTS.forEach(a=>agentWeights[a.key]=1.0);
 
 function addHolding(h){holdings.push(h||{ticker:"",name:"",market:"NASDAQ",weight:0,avg_price:null,sector:"Technology"});renderHoldings();}
 function removeHolding(i){holdings.splice(i,1);renderHoldings();}
-
 function renderHoldings(){
-  document.getElementById("holdings").innerHTML=holdings.map((h,i)=>`
-    <div class="holding-row">
-      <input value="${h.ticker}" onchange="holdings[${i}].ticker=this.value" placeholder="AAPL">
-      <input value="${h.name}" onchange="holdings[${i}].name=this.value" placeholder="Apple Inc.">
-      <select onchange="holdings[${i}].market=this.value">${MARKETS.map(m=>`<option${m===h.market?' selected':''}>${m}</option>`).join('')}</select>
-      <input type="number" value="${h.weight||''}" min="0" max="100" onchange="holdings[${i}].weight=+this.value;updateTotals()" placeholder="0">
-      <select onchange="holdings[${i}].sector=this.value">${SECTORS.map(s=>`<option${s===h.sector?' selected':''}>${s}</option>`).join('')}</select>
-      <input type="number" value="${h.avg_price||''}" onchange="holdings[${i}].avg_price=+this.value||null" placeholder="0">
-      <button class="btn btn-del" onclick="removeHolding(${i})">✕</button>
-    </div>`).join('');
-  updateTotals();
+  document.getElementById("holdings").innerHTML=holdings.map((h,i)=>`<div class="holding-row">
+    <input value="${h.ticker}" onchange="holdings[${i}].ticker=this.value" placeholder="AAPL">
+    <input value="${h.name}" onchange="holdings[${i}].name=this.value" placeholder="Apple">
+    <select onchange="holdings[${i}].market=this.value">${MARKETS.map(m=>`<option${m===h.market?' selected':''}>${m}</option>`).join('')}</select>
+    <input type="number" value="${h.weight||''}" min="0" max="100" onchange="holdings[${i}].weight=+this.value;updateTotals()" placeholder="0">
+    <select onchange="holdings[${i}].sector=this.value">${SECTORS.map(s=>`<option${s===h.sector?' selected':''}>${s}</option>`).join('')}</select>
+    <input type="number" value="${h.avg_price||''}" onchange="holdings[${i}].avg_price=+this.value||null" placeholder="0">
+    <button class="btn btn-danger" style="padding:4px 8px;font-size:12px" onclick="removeHolding(${i})">✕</button>
+  </div>`).join('');updateTotals();
 }
-
 function updateTotals(){
-  const sum=holdings.reduce((a,h)=>a+(h.weight||0),0);
-  const cash=+(document.getElementById("pCash").value)||0;
-  const tw=document.getElementById("totalWeight");
-  tw.textContent=sum+"%";tw.style.color=sum>100?'var(--red)':'var(--bright)';
-  document.getElementById("totalBar").style.width=Math.min(sum,100)+"%";
-  document.getElementById("totalBar").style.background=sum>100?'var(--red)':'var(--orange)';
-  const gt=document.getElementById("grandTotal");
-  gt.textContent=(sum+cash)+"%";gt.style.color=(sum+cash)>100?'var(--red)':(sum+cash)===100?'var(--green)':'var(--yellow)';
+  const s=holdings.reduce((a,h)=>a+(h.weight||0),0),c=+(document.getElementById("pCash").value)||0;
+  const tw=document.getElementById("totalWeight");tw.textContent=s+"%";tw.style.color=s>100?'#dc2626':'#1e293b';
+  document.getElementById("totalBar").style.width=Math.min(s,100)+"%";document.getElementById("totalBar").style.background=s>100?'#dc2626':'#4f6ef7';
+  const gt=document.getElementById("grandTotal");gt.textContent=(s+c)+"%";gt.style.color=(s+c)>100?'#dc2626':(s+c)===100?'#059669':'#d97706';
 }
-
 function renderAgentWeights(){
-  document.getElementById("agentWeights").innerHTML=AGENTS.map(a=>`
-    <div class="agent-item">
-      <div class="name">${a.avatar} ${a.key}</div>
-      <div class="desc">${a.desc}</div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <input type="range" min="0" max="2" step="0.1" value="${agentWeights[a.key]}"
-          oninput="agentWeights['${a.key}']=+this.value;this.nextElementSibling.textContent=this.value+'x'">
-        <span class="agent-val">${agentWeights[a.key]}x</span>
-      </div>
-    </div>`).join('');
+  document.getElementById("agentWeights").innerHTML=AGENTS.map(a=>`<div class="agent-item">
+    <div class="agent-name">${a.emoji} ${a.key}</div><div class="agent-desc">${a.desc}</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="range" min="0" max="2" step="0.1" value="${agentWeights[a.key]}" style="flex:1" oninput="agentWeights['${a.key}']=+this.value;this.nextElementSibling.textContent=this.value+'x'">
+      <span class="agent-val">${agentWeights[a.key]}x</span>
+    </div></div>`).join('');
 }
-
-function buildJSON(){
-  return JSON.stringify({name:document.getElementById("pName").value,updated_at:new Date().toISOString().split("T")[0],base_currency:document.getElementById("pCurrency").value,cash_weight:+(document.getElementById("pCash").value)||0,holdings:holdings.filter(h=>h.ticker).map(h=>({ticker:h.ticker,name:h.name,market:h.market,weight:h.weight||0,avg_price:h.avg_price,sector:h.sector})),constraints:{max_single_stock_weight:+document.getElementById("cStock").value,max_sector_weight:+document.getElementById("cSector").value,max_crypto_weight:+document.getElementById("cCrypto").value,min_cash_weight:+document.getElementById("cCash").value},agent_weights:{...agentWeights}},null,2);
-}
-
+function buildJSON(){return JSON.stringify({name:document.getElementById("pName").value,updated_at:new Date().toISOString().split("T")[0],base_currency:document.getElementById("pCurrency").value,cash_weight:+(document.getElementById("pCash").value)||0,holdings:holdings.filter(h=>h.ticker).map(h=>({ticker:h.ticker,name:h.name,market:h.market,weight:h.weight||0,avg_price:h.avg_price,sector:h.sector})),constraints:{max_single_stock_weight:+document.getElementById("cStock").value,max_sector_weight:+document.getElementById("cSector").value,max_crypto_weight:+document.getElementById("cCrypto").value,min_cash_weight:+document.getElementById("cCash").value},agent_weights:{...agentWeights}},null,2);}
 function downloadJSON(){const b=new Blob([buildJSON()],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="portfolio.json";a.click();}
-function copyJSON(){navigator.clipboard.writeText(buildJSON()).then(()=>alert("Copied to clipboard"));}
-
-fetch("data/latest_analysis.json").then(r=>r.ok?r.json():null).then(data=>{
-  if(data&&data.portfolio){const p=data.portfolio;document.getElementById("pName").value=p.name||"";document.getElementById("pCash").value=p.cash_weight||10;if(p.base_currency)document.getElementById("pCurrency").value=p.base_currency;if(p.constraints){document.getElementById("cStock").value=p.constraints.max_single_stock_weight||30;document.getElementById("cSector").value=p.constraints.max_sector_weight||50;document.getElementById("cCrypto").value=p.constraints.max_crypto_weight||15;document.getElementById("cCash").value=p.constraints.min_cash_weight||5;}if(p.agent_weights)Object.assign(agentWeights,p.agent_weights);holdings=(p.holdings||[]).map(h=>({...h}));renderHoldings();renderAgentWeights();}
-  else{holdings=[{ticker:"005930.KS",name:"삼성전자",market:"KRX",weight:25,sector:"Technology",avg_price:67000},{ticker:"AAPL",name:"Apple",market:"NASDAQ",weight:15,sector:"Technology",avg_price:195.5}];renderHoldings();renderAgentWeights();}
-}).catch(()=>{addHolding();renderAgentWeights();});
+function copyJSON(){navigator.clipboard.writeText(buildJSON()).then(()=>alert("Copied!"));}
+fetch("data/latest_analysis.json").then(r=>r.ok?r.json():null).then(data=>{if(data&&data.portfolio){const p=data.portfolio;document.getElementById("pName").value=p.name||"";document.getElementById("pCash").value=p.cash_weight||10;if(p.base_currency)document.getElementById("pCurrency").value=p.base_currency;if(p.constraints){document.getElementById("cStock").value=p.constraints.max_single_stock_weight||30;document.getElementById("cSector").value=p.constraints.max_sector_weight||50;document.getElementById("cCrypto").value=p.constraints.max_crypto_weight||15;document.getElementById("cCash").value=p.constraints.min_cash_weight||5;}if(p.agent_weights)Object.assign(agentWeights,p.agent_weights);holdings=(p.holdings||[]).map(h=>({...h}));renderHoldings();renderAgentWeights();}else{holdings=[{ticker:"005930.KS",name:"삼성전자",market:"KRX",weight:25,sector:"Technology",avg_price:67000},{ticker:"AAPL",name:"Apple",market:"NASDAQ",weight:15,sector:"Technology",avg_price:195.5}];renderHoldings();renderAgentWeights();}}).catch(()=>{addHolding();renderAgentWeights();});
 document.getElementById("pCash").addEventListener("input",updateTotals);
 </script>
 </body>

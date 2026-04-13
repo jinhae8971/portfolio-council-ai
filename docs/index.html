@@ -1,779 +1,226 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PORTFOLIO COUNCIL AI</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
-    <style>
-        /* === BLOOMBERG TERMINAL RESET === */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: #444; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Council AI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.6;font-size:14px}
+a{color:#4f6ef7;text-decoration:none}a:hover{text-decoration:underline}
 
-        body {
-            font-family: Consolas, 'Courier New', 'Liberation Mono', monospace;
-            background: #000000;
-            color: #FFFFFF;
-            font-size: 12px;
-            line-height: 1.4;
-            min-height: 100vh;
-        }
+/* Nav */
+.nav{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:#1e293b}
+.nav-brand img,.nav-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4f6ef7,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#64748b;transition:all 0.15s}
+.nav-links a:hover,.nav-links a.active{background:#f1f5f9;color:#4f6ef7;text-decoration:none}
 
-        /* === TOP HEADER BAR === */
-        .bb-header {
-            background: #FF6600;
-            color: #000;
-            padding: 4px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-        .bb-header .title { font-size: 15px; letter-spacing: 2px; }
-        .bb-header .meta { font-size: 11px; display: flex; gap: 16px; align-items: center; }
-        .bb-consensus-badge {
-            background: #000;
-            color: #FF6600;
-            padding: 2px 8px;
-            font-size: 10px;
-            letter-spacing: 1px;
-        }
+.container{max-width:1100px;margin:0 auto;padding:20px}
 
-        /* === NAV BAR === */
-        .bb-nav {
-            background: #111;
-            border-bottom: 1px solid #333;
-            padding: 3px 12px;
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        .bb-nav a {
-            color: #FF6600;
-            text-decoration: none;
-            padding: 2px 10px;
-            font-size: 11px;
-            letter-spacing: 1px;
-            border: 1px solid transparent;
-        }
-        .bb-nav a:hover { border-color: #FF6600; }
-        .bb-nav a.active { background: #FF6600; color: #000; }
-        .bb-nav .sep { color: #333; margin: 0 2px; }
+/* Cards */
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-bottom:16px}
+.card-header{font-size:15px;font-weight:600;color:#334155;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-header .icon{font-size:18px}
 
-        /* === MAIN CONTENT === */
-        .bb-main { padding: 6px; }
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px 20px;text-align:center}
+.kpi-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;font-weight:600}
+.kpi-value{font-size:26px;font-weight:700;margin:4px 0}
+.kpi-sub{font-size:11px;color:#94a3b8}
 
-        /* === KPI ROW === */
-        .bb-kpi-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: #333;
-            border: 1px solid #333;
-            margin-bottom: 6px;
-        }
-        .bb-kpi {
-            background: #000;
-            padding: 8px 10px;
-            text-align: center;
-        }
-        .bb-kpi .label {
-            color: #888;
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
-        .bb-kpi .value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #FFFFFF;
-        }
-        .bb-kpi .sub {
-            font-size: 9px;
-            color: #666;
-            margin-top: 1px;
-        }
+/* Badges */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#ecfdf5;color:#059669}
+.badge-yellow{background:#fffbeb;color:#d97706}
+.badge-orange{background:#fff7ed;color:#ea580c}
+.badge-red{background:#fef2f2;color:#dc2626}
+.badge-blue{background:#eff6ff;color:#2563eb}
 
-        /* === SPLIT PANELS === */
-        .bb-split {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: #333;
-            border: 1px solid #333;
-            margin-bottom: 6px;
-        }
-        .bb-panel {
-            background: #000;
-            padding: 8px;
-        }
-        .bb-panel-title {
-            color: #FF6600;
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #333;
-            padding-bottom: 4px;
-            margin-bottom: 6px;
-        }
+/* Stance pills */
+.stance{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.stance-ow{background:#ecfdf5;color:#059669}
+.stance-mt{background:#f8fafc;color:#64748b;border:1px solid #e2e8f0}
+.stance-uw{background:#fef2f2;color:#dc2626}
 
-        /* === CHART === */
-        .bb-chart-wrap {
-            position: relative;
-            width: 100%;
-            max-width: 280px;
-            margin: 0 auto;
-        }
+/* Agent cards */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.agent{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;cursor:pointer;transition:box-shadow 0.15s,border-color 0.15s}
+.agent:hover{box-shadow:0 4px 12px rgba(0,0,0,0.06);border-color:#c7d2fe}
+.agent-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.agent-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.av-quant{background:#eff6ff}.av-macro{background:#f0fdf4}.av-sector{background:#fef9c3}.av-cycle{background:#faf5ff}.av-crypto{background:#fff7ed}.av-value{background:#fdf2f8}
+.agent-name{font-weight:600;font-size:14px}.agent-role{font-size:11px;color:#94a3b8}
+.conf-bar{height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;margin:8px 0}
+.conf-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.agent-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #f1f5f9;font-size:13px;color:#64748b;line-height:1.7}
+.agent.open .agent-detail{display:block}
+.tag{display:inline-block;background:#f1f5f9;padding:2px 8px;border-radius:6px;font-size:11px;color:#64748b;margin:2px}
 
-        /* === TABLE === */
-        .bb-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
-        .bb-table th {
-            text-align: left;
-            color: #FF6600;
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 3px 6px;
-            border-bottom: 1px solid #333;
-            font-weight: normal;
-        }
-        .bb-table td {
-            padding: 3px 6px;
-            border-bottom: 1px solid #1a1a1a;
-            color: #ccc;
-        }
-        .bb-table tr:hover td { background: #0a0a0a; }
-        .bb-table .ticker { color: #FFFF00; font-weight: bold; }
-        .bb-table .up { color: #00FF00; }
-        .bb-table .down { color: #FF0000; }
-        .bb-table .action-buy { color: #00FF00; }
-        .bb-table .action-sell { color: #FF0000; }
-        .bb-table .action-hold { color: #FFFF00; }
-        .bb-table .action-reduce { color: #FF6600; }
-        .bb-table .action-increase { color: #00FF00; }
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;padding:10px 12px;font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;border-bottom:2px solid #f1f5f9}
+.tbl td{padding:10px 12px;border-bottom:1px solid #f8f9fb;font-size:13px}
+.tbl tr:hover{background:#fafbfd}
+.act-increase{color:#059669;font-weight:600}.act-reduce{color:#dc2626;font-weight:600}.act-add{color:#4f6ef7;font-weight:600}
 
-        /* === AGENT GRID === */
-        .bb-agent-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: #333;
-            border: 1px solid #333;
-            margin-bottom: 6px;
-        }
-        .bb-agent-card {
-            background: #000;
-            padding: 8px;
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-        .bb-agent-card:hover { background: #0a0a0a; }
-        .bb-agent-card.expanded { grid-column: span 3; }
-        .bb-agent-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-        .bb-agent-name {
-            color: #FF6600;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .bb-agent-avatar { font-size: 14px; }
-        .bb-agent-stance {
-            display: inline-block;
-            padding: 1px 6px;
-            font-size: 9px;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-        .stance-overweight { background: #003300; color: #00FF00; border: 1px solid #00FF00; }
-        .stance-underweight { background: #330000; color: #FF0000; border: 1px solid #FF0000; }
-        .stance-neutral { background: #333300; color: #FFFF00; border: 1px solid #FFFF00; }
-        .stance-hold { background: #1a1a00; color: #FFFF00; border: 1px solid #FFFF00; }
-        .bb-agent-conf {
-            font-size: 10px;
-            color: #888;
-            margin: 4px 0;
-        }
-        .bb-agent-conf span { color: #FFF; }
-        .bb-agent-points {
-            font-size: 10px;
-            color: #aaa;
-            line-height: 1.5;
-        }
-        .bb-agent-points li {
-            list-style: none;
-            padding-left: 10px;
-            position: relative;
-        }
-        .bb-agent-points li::before {
-            content: '>';
-            position: absolute;
-            left: 0;
-            color: #FF6600;
-        }
-        .bb-agent-detail {
-            display: none;
-            margin-top: 6px;
-            padding-top: 6px;
-            border-top: 1px solid #333;
-            font-size: 11px;
-            color: #999;
-            line-height: 1.6;
-        }
-        .bb-agent-card.expanded .bb-agent-detail { display: block; }
+/* Debate */
+.debate-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.debate-item:last-child{border:none}
+.debate-arrow{color:#4f6ef7;font-weight:700;white-space:nowrap;font-size:12px;min-width:140px}
+.debate-text{font-size:13px;color:#475569;line-height:1.6}
 
-        /* === CRITIQUE SECTION === */
-        .bb-critique-section {
-            border: 1px solid #333;
-            margin-bottom: 6px;
-        }
-        .bb-critique-title {
-            background: #111;
-            color: #FF6600;
-            font-size: 10px;
-            letter-spacing: 2px;
-            padding: 4px 10px;
-            border-bottom: 1px solid #333;
-        }
-        .bb-critique-log {
-            padding: 8px 10px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .bb-critique-entry {
-            margin-bottom: 8px;
-            font-size: 11px;
-            line-height: 1.5;
-        }
-        .bb-critique-entry .prompt {
-            color: #00FF00;
-        }
-        .bb-critique-entry .target {
-            color: #FF6600;
-        }
-        .bb-critique-entry .text {
-            color: #999;
-            padding-left: 16px;
-        }
+/* Risk */
+.risk-tag{display:inline-flex;align-items:center;gap:4px;background:#fef2f2;border:1px solid #fecaca;padding:4px 12px;border-radius:8px;font-size:12px;color:#dc2626;margin:3px}
 
-        /* === RISK WARNING === */
-        .bb-risk-bar {
-            background: #1a0000;
-            border: 1px solid #FF0000;
-            padding: 6px 10px;
-            margin-bottom: 6px;
-        }
-        .bb-risk-title {
-            color: #FF0000;
-            font-size: 10px;
-            letter-spacing: 2px;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
-        .bb-risk-item {
-            color: #FF6666;
-            font-size: 11px;
-            padding: 2px 0;
-            padding-left: 14px;
-            position: relative;
-        }
-        .bb-risk-item::before {
-            content: '!';
-            position: absolute;
-            left: 0;
-            color: #FF0000;
-            font-weight: bold;
-        }
+/* Cash */
+.cash-box{display:flex;align-items:center;gap:20px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px}
+.cash-arrow{font-size:20px;color:#059669}
 
-        /* === KEY INSIGHTS === */
-        .bb-insights {
-            border: 1px solid #333;
-            margin-bottom: 6px;
-        }
-        .bb-insights-title {
-            background: #111;
-            color: #FFFF00;
-            font-size: 10px;
-            letter-spacing: 2px;
-            padding: 4px 10px;
-            border-bottom: 1px solid #333;
-        }
-        .bb-insights-body {
-            padding: 8px 10px;
-        }
-        .bb-insight-item {
-            color: #ccc;
-            font-size: 11px;
-            padding: 2px 0;
-            padding-left: 14px;
-            position: relative;
-        }
-        .bb-insight-item::before {
-            content: '*';
-            position: absolute;
-            left: 0;
-            color: #FFFF00;
-        }
+/* Footer */
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:11px;margin-top:20px}
 
-        /* === CASH REC === */
-        .bb-cash {
-            border: 1px solid #333;
-            margin-bottom: 6px;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .bb-cash-label {
-            color: #888;
-            font-size: 9px;
-            letter-spacing: 1px;
-        }
-        .bb-cash-val { font-size: 16px; font-weight: bold; }
-        .bb-cash-arrow { color: #FF6600; font-size: 18px; }
-        .bb-cash-reason { color: #888; font-size: 10px; flex: 1; }
+/* Summary box */
+.summary{background:linear-gradient(135deg,#eff6ff,#faf5ff);border:1px solid #c7d2fe;border-radius:14px;padding:16px 20px;font-size:14px;color:#334155;line-height:1.7}
 
-        /* === DISCLAIMER === */
-        .bb-disclaimer {
-            color: #444;
-            font-size: 9px;
-            padding: 8px 10px;
-            border-top: 1px solid #222;
-            line-height: 1.5;
-        }
-
-        /* === CONF BAR === */
-        .conf-bar {
-            width: 60px;
-            height: 6px;
-            background: #222;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 4px;
-        }
-        .conf-bar-fill {
-            height: 100%;
-            background: #FF6600;
-        }
-
-        /* === STATUS LINE === */
-        .bb-status {
-            background: #111;
-            border-top: 1px solid #333;
-            padding: 2px 12px;
-            font-size: 9px;
-            color: #666;
-            display: flex;
-            justify-content: space-between;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        /* === LOADING === */
-        .bb-loading {
-            text-align: center;
-            padding: 40px;
-            color: #FF6600;
-            font-size: 14px;
-        }
-        .bb-loading .blink {
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* === RESPONSIVE === */
-        @media (max-width: 768px) {
-            .bb-kpi-row { grid-template-columns: repeat(2, 1fr); }
-            .bb-split { grid-template-columns: 1fr; }
-            .bb-agent-grid { grid-template-columns: 1fr; }
-            .bb-agent-card.expanded { grid-column: span 1; }
-            .bb-header { flex-direction: column; gap: 4px; text-align: center; }
-            .bb-cash { flex-direction: column; gap: 6px; }
-        }
-        @media (max-width: 480px) {
-            .bb-kpi-row { grid-template-columns: 1fr 1fr; }
-            .bb-kpi .value { font-size: 16px; }
-        }
-    </style>
+@media(max-width:768px){.kpi-row{grid-template-columns:repeat(2,1fr)}.agents-grid{grid-template-columns:1fr}.nav-links{display:none}}
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="bb-header">
-    <span class="title">PORTFOLIO COUNCIL AI</span>
-    <div class="meta">
-        <span id="hdr-date">--</span>
-        <span class="bb-consensus-badge" id="hdr-consensus">--</span>
-        <span id="hdr-time"></span>
-    </div>
+<div class="nav">
+  <div class="nav-brand"><div class="nav-icon">P</div> Portfolio Council AI</div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Dashboard</a>
+    <a href="portfolio-editor.html">Editor</a>
+    <a href="history.html">History</a>
+    <a href="accuracy.html">Accuracy</a>
+    <a href="dev-status.html">Dev</a>
+  </div>
 </div>
 
-<!-- NAV -->
-<div class="bb-nav">
-    <a href="index.html" class="active">DASHBOARD</a>
-    <span class="sep">|</span>
-    <a href="portfolio-editor.html">EDITOR</a>
-    <span class="sep">|</span>
-    <a href="history.html">HISTORY</a>
-    <span class="sep">|</span>
-    <a href="accuracy.html">ACCURACY</a>
-    <span class="sep">|</span>
-    <a href="dev-status.html">DEV</a>
-</div>
-
-<!-- MAIN -->
-<div class="bb-main" id="app">
-    <div class="bb-loading" id="loading">
-        <div>LOADING ANALYSIS DATA<span class="blink">_</span></div>
-    </div>
-</div>
-
-<!-- STATUS BAR -->
-<div class="bb-status">
-    <span>PORTFOLIO COUNCIL AI v2.0 | BLOOMBERG TERMINAL STYLE</span>
-    <span id="status-clock"></span>
-</div>
+<div class="container" id="app"><div style="text-align:center;padding:60px;color:#94a3b8">Loading...</div></div>
 
 <script>
-// ========== DEMO DATA ==========
-const DEMO_DATA = {
-    date: "2026-04-13",
-    portfolio: {
-        name: "Tech Growth Portfolio",
-        holdings: [
-            {ticker:"AAPL", name:"Apple Inc", weight:20, sector:"Technology"},
-            {ticker:"MSFT", name:"Microsoft", weight:18, sector:"Technology"},
-            {ticker:"NVDA", name:"NVIDIA", weight:15, sector:"Semiconductors"},
-            {ticker:"GOOGL", name:"Alphabet", weight:12, sector:"Technology"},
-            {ticker:"AMZN", name:"Amazon", weight:10, sector:"Consumer"},
-            {ticker:"TSLA", name:"Tesla", weight:8, sector:"Automotive"},
-            {ticker:"META", name:"Meta Platforms", weight:7, sector:"Technology"}
-        ],
-        cash_weight: 10
-    },
-    debate: {
-        phase1_reports: [
-            {agent_name:"퀀트", avatar:"\ud83d\udd22", role:"Quantitative Analyst", analysis:"모멘텀 시그널이 약화되고 있으며, RSI 과매수 구간 진입. 변동성 확대 국면에서 방어적 포지션 전환 권고. VIX 20 상회 시 추가 하방 리스크 존재.", key_points:["RSI 과매수 경고","모멘텀 둔화 신호","변동성 확대 우려"], confidence_score:75, overall_stance:"UNDERWEIGHT"},
-            {agent_name:"가치투자자", avatar:"\ud83d\udcb0", role:"Value Investor", analysis:"현재 밸류에이션 PER 28x로 역사적 평균 대비 고평가. AAPL, MSFT의 FCF yield이 3% 미만으로 안전마진 부족. 현금 비중 확대 후 조정 시 매수 기회 포착 전략.", key_points:["PER 28x 고평가","FCF yield 부족","현금 확대 권고"], confidence_score:82, overall_stance:"UNDERWEIGHT"},
-            {agent_name:"성장투자자", avatar:"\ud83d\ude80", role:"Growth Investor", analysis:"AI 인프라 투자 사이클 2단계 진입. NVDA 데이터센터 매출 QoQ +15% 예상. 클라우드 Capex 확대로 반도체-소프트웨어 밸류체인 수혜 지속. 성장주 비중 유지 권고.", key_points:["AI 투자 사이클 2단계","NVDA 매출 성장 기대","클라우드 Capex 확대"], confidence_score:70, overall_stance:"OVERWEIGHT"},
-            {agent_name:"매크로", avatar:"\ud83c\udf0d", role:"Macro Strategist", analysis:"Fed 금리 인하 기대 후퇴, 10Y 국채 4.5% 돌파. 강달러 환경에서 수출 기업 실적 압박. 인플레이션 재점화 리스크 모니터링 필요. 방어적 스탠스 유지.", key_points:["금리 인하 기대 후퇴","강달러 수출 압박","인플레 재점화 리스크"], confidence_score:78, overall_stance:"UNDERWEIGHT"},
-            {agent_name:"리스크매니저", avatar:"\u26a0\ufe0f", role:"Risk Manager", analysis:"포트폴리오 테크 섹터 집중도 80% 초과, 분산 미흡. 최대 드로다운 시나리오 -18% 추정. 헤지 전략과 현금 비중 확대로 꼬리 리스크 완화 필요.", key_points:["섹터 집중도 과다","Max DD -18% 추정","헤지 전략 필요"], confidence_score:85, overall_stance:"UNDERWEIGHT"},
-            {agent_name:"심리분석가", avatar:"\ud83e\udde0", role:"Sentiment Analyst", analysis:"Fear & Greed Index 72(Greed). 개인투자자 레버리지 매수 급증. 소셜 미디어 FOMO 신호 감지. 과열 구간으로 단기 조정 가능성 높음. 역발상 매도 시그널.", key_points:["Greed 구간 진입","레버리지 매수 급증","FOMO 과열 신호"], confidence_score:72, overall_stance:"UNDERWEIGHT"}
-        ],
-        phase2_critiques: [
-            {from_agent:"퀀트", to_agent:"성장투자자", critique:"AI 성장 내러티브에 과도하게 의존. NVDA P/S 30x는 이미 장밋빛 시나리오를 반영. 기대 대비 실적 미스 시 급락 리스크 과소평가."},
-            {from_agent:"성장투자자", to_agent:"가치투자자", critique:"전통적 밸류 지표로 AI 혁명기 기업을 평가하는 것은 부적절. TAM 확장과 수익성 개선 트렌드를 고려하면 현 밸류에이션 정당화 가능."},
-            {from_agent:"가치투자자", to_agent:"성장투자자", critique:"모든 버블이 '이번엔 다르다'로 시작. FCF 기반 내재가치 대비 50% 프리미엄은 장기 투자자 관점에서 수용 불가."},
-            {from_agent:"매크로", to_agent:"퀀트", critique:"기술적 지표만으로 매크로 레짐 변화를 포착하기 어려움. 금리 환경 변화가 멀티플 압축으로 이어질 수 있는 구조적 리스크 과소평가."},
-            {from_agent:"리스크매니저", to_agent:"성장투자자", critique:"집중 포지션의 꼬리 리스크를 과소평가. 2022년 테크 하락장 재현 시 -30% 이상 손실 가능. 분산과 헤지가 수익률보다 우선."},
-            {from_agent:"심리분석가", to_agent:"매크로", critique:"매크로 지표는 후행적. 시장 심리 선행지표가 이미 과열을 경고 중. 심리 반전 시 매크로 데이터와 무관하게 급락 가능."}
-        ]
-    },
-    verdict: {
-        consensus_type: "strong_consensus",
-        confidence_score: 76,
-        summary: "6명 에이전트 중 5명이 UNDERWEIGHT 의견. 밸류에이션 부담, 금리 환경 악화, 심리 과열이 복합적으로 작용. 테크 비중 축소 및 현금 확대 권고.",
-        portfolio_changes: [
-            {ticker:"AAPL", name:"Apple", action:"reduce", from_weight:20, to_weight:16, reason:"밸류에이션 부담, FCF yield 부족"},
-            {ticker:"NVDA", name:"NVIDIA", action:"reduce", from_weight:15, to_weight:12, reason:"P/S 30x 과열, 기대 실적 미스 리스크"},
-            {ticker:"TSLA", name:"Tesla", action:"reduce", from_weight:8, to_weight:5, reason:"변동성 과다, 실적 불확실성"},
-            {ticker:"MSFT", name:"Microsoft", action:"hold", from_weight:18, to_weight:18, reason:"클라우드 성장 안정적, 밸류에이션 상대 양호"},
-            {ticker:"GOOGL", name:"Alphabet", action:"hold", from_weight:12, to_weight:12, reason:"광고 매출 회복, AI 투자 수혜"},
-            {ticker:"AMZN", name:"Amazon", action:"increase", from_weight:10, to_weight:12, reason:"AWS 성장 가속, 리테일 마진 개선"}
-        ],
-        risk_warnings: [
-            "테크 섹터 집중도 80% 초과 - 분산 시급",
-            "금리 인상 재개 시 멀티플 압축 -15~20% 가능",
-            "AI 버블 논쟁 심화 - 실적 시즌 변곡점 주의",
-            "지정학적 리스크 (대중 반도체 규제 확대 가능성)"
-        ],
-        stance_votes: {"퀀트":"UNDERWEIGHT","가치투자자":"UNDERWEIGHT","성장투자자":"OVERWEIGHT","매크로":"UNDERWEIGHT","리스크매니저":"UNDERWEIGHT","심리분석가":"UNDERWEIGHT"},
-        key_insights: [
-            "5:1 UNDERWEIGHT 합의 - 방어적 포지션 전환 권고",
-            "현금 비중 10% → 18% 확대로 드로다운 완충",
-            "NVDA, AAPL 비중 축소 후 조정 시 재진입 전략",
-            "AMZN 유일한 비중 확대 - AWS + 리테일 이중 성장",
-            "다음 실적 시즌(4월 말)이 시장 방향 결정적 변곡점"
-        ],
-        cash_recommendation: {current:10, target:18, reason:"드로다운 완충 및 조정 시 매수 여력 확보"}
+const DEMO={date:"2026-04-13",portfolio:{name:"younggil_portfolio",cash_weight:10,holdings:[{ticker:"005930.KS",name:"삼성전자",weight:25,sector:"Technology"},{ticker:"AAPL",name:"Apple",weight:15,sector:"Technology"},{ticker:"NVDA",name:"NVIDIA",weight:15,sector:"Technology"},{ticker:"GOOGL",name:"Alphabet",weight:10,sector:"Technology"},{ticker:"BTC",name:"Bitcoin",weight:10,sector:"Crypto"},{ticker:"ETH",name:"Ethereum",weight:5,sector:"Crypto"},{ticker:"TLT",name:"Treasury ETF",weight:10,sector:"Bond"}]},debate:{phase1_reports:[{agent_name:"퀀트",avatar:"🔢",role:"기술적 지표·팩터·리스크",analysis:"RSI 14일 기준 NVDA 72.5로 과매수 직전. 포트폴리오 Sharpe 0.92, 연환산 변동성 22.1%. 기술주 상관 0.78로 집중 리스크가 존재합니다. AAPL RSI 58.3은 중립 구간입니다.",key_points:["NVDA RSI 72.5 과매수 직전","Sharpe 0.92 양호","기술주 상관 0.78 집중위험"],confidence_score:75,overall_stance:"UNDERWEIGHT"},{agent_name:"매크로",avatar:"🌍",role:"거시경제·금리·환율",analysis:"미 연준 금리 인하 사이클 진입. 10Y-2Y 스프레드 +0.2% 정상화. CPI 2.8% 하락 추세. 경기 후기확장 판단으로 채권 비중 확대가 유리한 환경입니다.",key_points:["경기 후기확장 판단","금리 인하 사이클","채권 비중 확대 유리"],confidence_score:68,overall_stance:"MAINTAIN"},{agent_name:"섹터",avatar:"🏭",role:"섹터 로테이션·업종",analysis:"기술섹터 비중 65%로 과도한 편중. 헬스케어·에너지 부재. AI 반도체 상대강도 상위이나 방어적 섹터 추가가 필요합니다.",key_points:["기술 65% 과편중","헬스케어 부재","방어 섹터 필요"],confidence_score:72,overall_stance:"UNDERWEIGHT"},{agent_name:"사이클",avatar:"🔄",role:"시장 사이클·타이밍",analysis:"S&P500 분배 국면 진입 신호. Fear & Greed 35 공포 구간, VIX 22.5 경계. 방어적 포지셔닝 및 현금 비중 확대를 권고합니다.",key_points:["분배 국면 진입","F&G 35 공포","방어적 포지셔닝"],confidence_score:65,overall_stance:"UNDERWEIGHT"},{agent_name:"크립토",avatar:"₿",role:"암호화폐·DeFi·온체인",analysis:"BTC 반감기 후 확장 국면. 도미넌스 52.3% 안정적. 크립토 비중 15%는 적정 수준이며 유지를 권고합니다.",key_points:["BTC 반감기 후 확장","도미넌스 52.3%","15% 적정"],confidence_score:60,overall_stance:"MAINTAIN"},{agent_name:"가치투자자",avatar:"📚",role:"밸류에이션·안전마진",analysis:"삼성전자 PBR 0.95 저평가, 안전마진 18%. NVDA PER 65로 업종평균 25 대비 160% 프리미엄. 삼성전자 확대, NVDA 축소를 권고합니다.",key_points:["삼성전자 안전마진 18%","NVDA PER 65 고평가","GOOGL 합리적"],confidence_score:70,overall_stance:"MAINTAIN"}],phase2_critiques:[{from_agent:"퀀트",to_agent:"가치투자자",critique:"PBR 0.95 저평가 주장은 글로벌 섹터 평균 PBR 1.8 대비 할인율을 미반영. 절대 PBR이 아닌 상대적 위치를 봐야 합니다."},{from_agent:"가치투자자",to_agent:"퀀트",critique:"RSI 72.5는 단기 노이즈. 3년간 이 구간에서 기술적 매도 후 역전 비율 40%. 장기 가치가 더 중요합니다."},{from_agent:"매크로",to_agent:"섹터",critique:"섹터 편중 위험 지적에 동의하나, 금리 인하 환경에서 기술 성장주 수혜를 간과하고 있습니다."},{from_agent:"섹터",to_agent:"매크로",critique:"금리 인하가 모든 기술주에 동일 수혜가 아닙니다. AI 하드웨어/소프트웨어 밸류체인 위치에 따라 다릅니다."},{from_agent:"사이클",to_agent:"크립토",critique:"BTC 반감기 사이클과 별개로, 유동성 축소 환경에서 위험자산 전반이 압박받을 가능성이 있습니다."},{from_agent:"크립토",to_agent:"사이클",critique:"전통 사이클 프레임으로 24/7 크립토를 판단하는 것은 한계. 온체인 활성 주소 증가가 펀더멘탈 강화를 시사합니다."}]},verdict:{consensus_type:"majority_view",confidence_score:68,summary:"6명 에이전트 중 4명이 기술주 과도 편중과 방어적 포지셔닝 필요성에 동의했습니다. NVDA 비중 축소, 현금 확대, 방어적 섹터 추가를 권고합니다.",portfolio_changes:[{ticker:"NVDA",name:"NVIDIA",action:"reduce",from_weight:15,to_weight:10,reason:"PER 65 고평가 + RSI 과매수 직전",supporters:["퀀트","가치투자자"]},{ticker:"005930.KS",name:"삼성전자",action:"increase",from_weight:25,to_weight:28,reason:"PBR 0.95 저평가, 안전마진 18%",supporters:["가치투자자","섹터"]},{ticker:"XLV",name:"Healthcare ETF",action:"add_new",from_weight:0,to_weight:5,reason:"방어적 섹터 분산",supporters:["섹터","사이클"]}],cash_recommendation:{current:10,target:15,reason:"분배 국면 진입 + VIX 상승 추세"},risk_warnings:["기술주 65% 편중 리스크","금리 변동성 확대 가능","지정학적 불확실성"],key_insights:["NVDA 과매수+고평가 이중 경고","삼성전자 저평가 기회","방어적 포지셔닝 타이밍"],stance_votes:{퀀트:"UNDERWEIGHT",매크로:"MAINTAIN",섹터:"UNDERWEIGHT",사이클:"UNDERWEIGHT",크립토:"MAINTAIN",가치투자자:"MAINTAIN"}}};
+
+async function load(){try{const r=await fetch('./data/latest_analysis.json?t='+Date.now());if(r.ok)return await r.json();}catch(e){}return DEMO;}
+
+function consBadge(t){const m={strong_consensus:['Strong Consensus','badge-green'],majority_view:['Majority View','badge-yellow'],split_decision:['Split Decision','badge-orange'],no_consensus:['No Consensus','badge-red']};const[l,c]=m[t]||['Unknown','badge-blue'];return`<span class="badge ${c}">${l}</span>`;}
+function stancePill(s){const c=s.includes('OVER')?'stance-ow':s==='MAINTAIN'?'stance-mt':'stance-uw';const l={STRONG_OVERWEIGHT:'Strong OW',OVERWEIGHT:'Overweight',MAINTAIN:'Maintain',UNDERWEIGHT:'Underweight',STRONG_UNDERWEIGHT:'Strong UW'};return`<span class="stance ${c}">${l[s]||s}</span>`;}
+function confCol(s){return s>=70?'#059669':s>=50?'#d97706':'#dc2626';}
+const avClass={퀀트:'av-quant',매크로:'av-macro',섹터:'av-sector',사이클:'av-cycle',크립토:'av-crypto',가치투자자:'av-value'};
+
+function render(data){
+  const v=data.verdict,p=data.portfolio,d=data.debate;
+  const changes=v.portfolio_changes||[];
+  const risks=v.risk_warnings||[];
+  const insights=v.key_insights||[];
+  const cash=v.cash_recommendation;
+
+  let h=`
+  <!-- Date + Consensus -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div style="font-size:13px;color:#94a3b8">Last analysis: <strong style="color:#1e293b">${data.date}</strong></div>
+    <div>${consBadge(v.consensus_type)}</div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Confidence</div><div class="kpi-value" style="color:${confCol(v.confidence_score)}">${v.confidence_score}%</div></div>
+    <div class="kpi"><div class="kpi-label">Changes</div><div class="kpi-value" style="color:#4f6ef7">${changes.length}</div><div class="kpi-sub">rebalance suggestions</div></div>
+    <div class="kpi"><div class="kpi-label">Risks</div><div class="kpi-value" style="color:${risks.length>=3?'#dc2626':'#d97706'}">${risks.length}</div><div class="kpi-sub">warnings</div></div>
+    <div class="kpi"><div class="kpi-label">Agents</div><div class="kpi-value">6</div><div class="kpi-sub">voted</div></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">${v.summary}</div>`;
+
+  // Cash recommendation
+  if(cash){
+    h+=`<div class="card" style="margin-top:16px"><div class="card-header"><span class="icon">💰</span> Cash Allocation</div>
+    <div class="cash-box">
+      <div><div style="font-size:11px;color:#94a3b8">Current</div><div style="font-size:24px;font-weight:700">${cash.current}%</div></div>
+      <div class="cash-arrow">→</div>
+      <div><div style="font-size:11px;color:#94a3b8">Recommended</div><div style="font-size:24px;font-weight:700;color:#059669">${cash.target}%</div></div>
+      <div style="flex:1;font-size:13px;color:#64748b;padding-left:16px;border-left:1px solid #bbf7d0">${cash.reason}</div>
+    </div></div>`;
+  }
+
+  // Two columns: Chart + Table
+  h+=`<div style="display:grid;grid-template-columns:1fr 1.5fr;gap:16px;margin-top:16px">
+    <div class="card"><div class="card-header"><span class="icon">📊</span> Portfolio</div><canvas id="chart"></canvas></div>
+    <div class="card"><div class="card-header"><span class="icon">📋</span> Rebalance Suggestions</div>`;
+
+  if(changes.length){
+    h+=`<table class="tbl"><thead><tr><th>Ticker</th><th>Action</th><th>Before</th><th>After</th><th>Reason</th></tr></thead><tbody>`;
+    for(const c of changes){
+      const delta=c.to_weight-c.from_weight;
+      const cls=c.action==='reduce'?'act-reduce':c.action==='add_new'?'act-add':'act-increase';
+      const icon={increase:'↑ Increase',reduce:'↓ Reduce',add_new:'+ New',remove:'✕ Remove'}[c.action]||c.action;
+      h+=`<tr><td><strong>${c.name}</strong><div style="font-size:11px;color:#94a3b8">${c.ticker}</div></td><td class="${cls}">${icon}</td><td>${c.from_weight}%</td><td>${c.to_weight}%</td><td style="font-size:12px;color:#64748b">${c.reason}</td></tr>`;
     }
-};
+    h+=`</tbody></table>`;
+  }else{h+=`<div style="text-align:center;padding:20px;color:#94a3b8">No changes recommended</div>`;}
+  h+=`</div></div>`;
 
-// ========== APP ==========
-let analysisData = null;
+  // Agents
+  h+=`<div class="card"><div class="card-header"><span class="icon">🤖</span> Agent Analysis</div><div class="agents-grid">`;
+  for(const r of d.phase1_reports){
+    h+=`<div class="agent" onclick="this.classList.toggle('open')">
+      <div class="agent-top">
+        <div class="agent-avatar ${avClass[r.agent_name]||'av-quant'}">${r.avatar}</div>
+        <div style="flex:1"><div class="agent-name">${r.agent_name}</div><div class="agent-role">${r.role}</div></div>
+        ${stancePill(r.overall_stance)}
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8"><span>Confidence</span><span style="color:${confCol(r.confidence_score)};font-weight:600">${r.confidence_score}%</span></div>
+      <div class="conf-bar"><div class="conf-fill" style="width:${r.confidence_score}%;background:${confCol(r.confidence_score)}"></div></div>
+      <div class="agent-detail">
+        <p>${r.analysis}</p>
+        <div style="margin-top:8px">${(r.key_points||[]).map(k=>`<span class="tag">${k}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  }
+  h+=`</div></div>`;
 
-async function loadData() {
-    try {
-        const res = await fetch('data/latest_analysis.json');
-        if (!res.ok) throw new Error('No data file');
-        analysisData = await res.json();
-    } catch(e) {
-        console.log('Using demo data:', e.message);
-        analysisData = DEMO_DATA;
-    }
-    render();
+  // Debate
+  h+=`<div class="card"><div class="card-header"><span class="icon">💬</span> Cross-Agent Debate</div>`;
+  for(const c of d.phase2_critiques){
+    h+=`<div class="debate-item"><div class="debate-arrow">${c.from_agent} → ${c.to_agent}</div><div class="debate-text">${c.critique}</div></div>`;
+  }
+  h+=`</div>`;
+
+  // Insights
+  if(insights.length){
+    h+=`<div class="card"><div class="card-header"><span class="icon">💡</span> Key Insights</div>`;
+    for(const i of insights)h+=`<div style="padding:6px 0;font-size:13px;color:#334155;border-bottom:1px solid #f1f5f9">• ${i}</div>`;
+    h+=`</div>`;
+  }
+
+  // Risks
+  if(risks.length){
+    h+=`<div class="card"><div class="card-header"><span class="icon">⚠️</span> Risk Warnings</div><div style="display:flex;flex-wrap:wrap;gap:4px">`;
+    for(const r of risks)h+=`<span class="risk-tag">⚠ ${r}</span>`;
+    h+=`</div></div>`;
+  }
+
+  h+=`<footer>⚠️ 본 서비스는 AI 기반 투자 참고 정보를 제공하며, 투자자문업에 해당하지 않습니다.<br>모든 투자 결정은 사용자 본인의 판단과 책임 하에 이루어져야 합니다.<br><br>Powered by Portfolio Council AI</footer>`;
+
+  document.getElementById('app').innerHTML=h;
+
+  // Donut chart
+  const hl=p.holdings||[];
+  const labels=[...hl.map(x=>x.name),'Cash'];
+  const weights=[...hl.map(x=>x.weight),p.cash_weight||0];
+  const colors=['#4f6ef7','#a855f7','#059669','#d97706','#dc2626','#ec4899','#06b6d4','#94a3b8'];
+  new Chart(document.getElementById('chart'),{type:'doughnut',data:{labels,datasets:[{data:weights,backgroundColor:colors.slice(0,labels.length),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{padding:10,font:{size:11,family:'Inter'}}}}}});
 }
 
-function render() {
-    const d = analysisData;
-    document.getElementById('hdr-date').textContent = d.date;
-    const ct = d.verdict.consensus_type.replace(/_/g,' ').toUpperCase();
-    const badge = document.getElementById('hdr-consensus');
-    badge.textContent = ct;
-
-    const app = document.getElementById('app');
-    app.innerHTML = '';
-
-    // KPI ROW
-    const totalAgents = d.debate.phase1_reports.length;
-    const votes = d.verdict.stance_votes;
-    const underCount = Object.values(votes).filter(v=>v==='UNDERWEIGHT').length;
-    const overCount = Object.values(votes).filter(v=>v==='OVERWEIGHT').length;
-    const holdCount = totalAgents - underCount - overCount;
-
-    app.innerHTML += `
-    <div class="bb-kpi-row">
-        <div class="bb-kpi">
-            <div class="label">CONFIDENCE</div>
-            <div class="value" style="color:${d.verdict.confidence_score>=70?'#00FF00':'#FFFF00'}">${d.verdict.confidence_score}%</div>
-            <div class="sub">${ct}</div>
-        </div>
-        <div class="bb-kpi">
-            <div class="label">AGENTS</div>
-            <div class="value">${totalAgents}</div>
-            <div class="sub" style="color:#00FF00">OW:${overCount} <span style="color:#FF0000">UW:${underCount}</span> <span style="color:#FFFF00">H:${holdCount}</span></div>
-        </div>
-        <div class="bb-kpi">
-            <div class="label">CASH TARGET</div>
-            <div class="value" style="color:#FF6600">${d.verdict.cash_recommendation.target}%</div>
-            <div class="sub">FROM ${d.verdict.cash_recommendation.current}%</div>
-        </div>
-        <div class="bb-kpi">
-            <div class="label">CHANGES</div>
-            <div class="value">${d.verdict.portfolio_changes.length}</div>
-            <div class="sub">REBALANCE ACTIONS</div>
-        </div>
-    </div>`;
-
-    // CASH RECOMMENDATION
-    app.innerHTML += `
-    <div class="bb-cash">
-        <div>
-            <div class="bb-cash-label">CASH ALLOCATION</div>
-            <div class="bb-cash-val" style="color:#FFFF00">${d.verdict.cash_recommendation.current}%</div>
-        </div>
-        <div class="bb-cash-arrow">&rarr;</div>
-        <div>
-            <div class="bb-cash-label">TARGET</div>
-            <div class="bb-cash-val" style="color:#00FF00">${d.verdict.cash_recommendation.target}%</div>
-        </div>
-        <div class="bb-cash-reason">${d.verdict.cash_recommendation.reason}</div>
-    </div>`;
-
-    // SPLIT: CHART + TABLE
-    app.innerHTML += `
-    <div class="bb-split">
-        <div class="bb-panel">
-            <div class="bb-panel-title">PORTFOLIO ALLOCATION</div>
-            <div class="bb-chart-wrap"><canvas id="donutChart"></canvas></div>
-        </div>
-        <div class="bb-panel">
-            <div class="bb-panel-title">REBALANCE ACTIONS</div>
-            <table class="bb-table">
-                <thead>
-                    <tr><th>TICKER</th><th>NAME</th><th>ACTION</th><th>FROM</th><th>TO</th><th>CHG</th></tr>
-                </thead>
-                <tbody id="changeTable"></tbody>
-            </table>
-        </div>
-    </div>`;
-
-    // Fill table
-    const tbody = document.getElementById('changeTable');
-    d.verdict.portfolio_changes.forEach(c => {
-        const chg = c.to_weight - c.from_weight;
-        const chgStr = chg > 0 ? `+${chg}%` : `${chg}%`;
-        const chgClass = chg > 0 ? 'up' : chg < 0 ? 'down' : '';
-        const actionMap = {reduce:'action-reduce', increase:'action-increase', hold:'action-hold', buy:'action-buy', sell:'action-sell'};
-        const aClass = actionMap[c.action] || '';
-        tbody.innerHTML += `<tr>
-            <td class="ticker">${c.ticker}</td>
-            <td>${c.name}</td>
-            <td class="${aClass}">${c.action.toUpperCase()}</td>
-            <td>${c.from_weight}%</td>
-            <td>${c.to_weight}%</td>
-            <td class="${chgClass}">${chgStr}</td>
-        </tr>`;
-    });
-
-    // Draw chart
-    setTimeout(() => drawDonut(d), 50);
-
-    // AGENT GRID
-    let agentHtml = '<div class="bb-agent-grid" id="agentGrid">';
-    d.debate.phase1_reports.forEach((a, i) => {
-        const stanceClass = a.overall_stance === 'OVERWEIGHT' ? 'stance-overweight' :
-                           a.overall_stance === 'UNDERWEIGHT' ? 'stance-underweight' : 'stance-neutral';
-        const points = a.key_points.map(p => `<li>${p}</li>`).join('');
-        agentHtml += `
-        <div class="bb-agent-card" data-idx="${i}" onclick="toggleAgent(this)">
-            <div class="bb-agent-header">
-                <span class="bb-agent-name">${a.avatar} ${a.agent_name}</span>
-                <span class="bb-agent-stance ${stanceClass}">${a.overall_stance}</span>
-            </div>
-            <div class="bb-agent-conf">
-                CONF: <span>${a.confidence_score}%</span>
-                <span class="conf-bar"><span class="conf-bar-fill" style="width:${a.confidence_score}%"></span></span>
-            </div>
-            <ul class="bb-agent-points">${points}</ul>
-            <div class="bb-agent-detail">
-                <div style="color:#FF6600;font-size:9px;margin-bottom:4px;">ROLE: ${a.role}</div>
-                ${a.analysis}
-            </div>
-        </div>`;
-    });
-    agentHtml += '</div>';
-    app.innerHTML += agentHtml;
-
-    // CRITIQUES
-    let critHtml = `<div class="bb-critique-section">
-        <div class="bb-critique-title">CROSS-CRITIQUE LOG [PHASE 2]</div>
-        <div class="bb-critique-log">`;
-    d.debate.phase2_critiques.forEach(c => {
-        critHtml += `<div class="bb-critique-entry">
-            <span class="prompt">${c.from_agent}</span> <span style="color:#666">&rarr;</span> <span class="target">${c.to_agent}</span>
-            <div class="text">${c.critique}</div>
-        </div>`;
-    });
-    critHtml += '</div></div>';
-    app.innerHTML += critHtml;
-
-    // KEY INSIGHTS
-    let insHtml = `<div class="bb-insights">
-        <div class="bb-insights-title">KEY INSIGHTS</div>
-        <div class="bb-insights-body">`;
-    d.verdict.key_insights.forEach(k => {
-        insHtml += `<div class="bb-insight-item">${k}</div>`;
-    });
-    insHtml += '</div></div>';
-    app.innerHTML += insHtml;
-
-    // RISK WARNINGS
-    let riskHtml = `<div class="bb-risk-bar">
-        <div class="bb-risk-title">&#9888; RISK WARNINGS</div>`;
-    d.verdict.risk_warnings.forEach(r => {
-        riskHtml += `<div class="bb-risk-item">${r}</div>`;
-    });
-    riskHtml += '</div>';
-    app.innerHTML += riskHtml;
-
-    // VERDICT SUMMARY
-    app.innerHTML += `
-    <div style="border:1px solid #333;margin-bottom:6px;padding:8px 10px;">
-        <div style="color:#FF6600;font-size:10px;letter-spacing:2px;margin-bottom:4px;">VERDICT SUMMARY</div>
-        <div style="color:#ccc;font-size:11px;line-height:1.6;">${d.verdict.summary}</div>
-    </div>`;
-
-    // DISCLAIMER
-    app.innerHTML += `
-    <div class="bb-disclaimer">
-        DISCLAIMER: This analysis is generated by AI agents for informational purposes only.
-        It does not constitute investment advice. Past performance does not guarantee future results.
-        Always consult a qualified financial advisor before making investment decisions.
-        Portfolio Council AI is not responsible for any losses incurred based on this analysis.
-        &copy; ${new Date().getFullYear()} Portfolio Council AI
-    </div>`;
-
-    // Remove loading
-    document.getElementById('loading')?.remove();
-}
-
-function drawDonut(d) {
-    const canvas = document.getElementById('donutChart');
-    if (!canvas) return;
-    const labels = [...d.portfolio.holdings.map(h=>h.ticker), 'CASH'];
-    const weights = [...d.portfolio.holdings.map(h=>h.weight), d.portfolio.cash_weight];
-    const colors = ['#FF6600','#FFFF00','#00FF00','#FF0000','#00CCFF','#FF00FF','#FFFFFF','#888888'];
-
-    new Chart(canvas, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: weights,
-                backgroundColor: colors.slice(0, labels.length),
-                borderColor: '#000',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            cutout: '55%',
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#ccc',
-                        font: { family: "Consolas, 'Courier New', monospace", size: 10 },
-                        padding: 6,
-                        boxWidth: 10,
-                        boxHeight: 10
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#111',
-                    titleColor: '#FF6600',
-                    bodyColor: '#FFF',
-                    borderColor: '#333',
-                    borderWidth: 1,
-                    titleFont: { family: "Consolas, monospace" },
-                    bodyFont: { family: "Consolas, monospace" },
-                    callbacks: {
-                        label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
-                    }
-                }
-            }
-        }
-    });
-}
-
-function toggleAgent(el) {
-    const grid = document.getElementById('agentGrid');
-    const wasExpanded = el.classList.contains('expanded');
-    grid.querySelectorAll('.bb-agent-card').forEach(c => c.classList.remove('expanded'));
-    if (!wasExpanded) el.classList.add('expanded');
-}
-
-// Clock
-function updateClock() {
-    const now = new Date();
-    const t = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-    document.getElementById('status-clock').textContent = t;
-    document.getElementById('hdr-time').textContent = t;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// INIT
-loadData();
+load().then(render);
 </script>
 </body>
 </html>

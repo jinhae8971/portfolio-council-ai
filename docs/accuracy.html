@@ -3,71 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ACCURACY | Portfolio Council AI</title>
+<title>Accuracy | Portfolio Council AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Consolas,'Courier New',monospace;background:#000;color:#ccc;font-size:13px;line-height:1.5}
-.top-bar{background:#ff6600;color:#000;padding:4px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px}
-.top-bar a{color:#000;text-decoration:none;margin-left:16px;font-weight:400}
-.top-bar a:hover{text-decoration:underline}
-.container{max-width:1000px;margin:0 auto;padding:12px}
-.section{border:1px solid #333;margin-bottom:8px}
-.section-hdr{background:#111;padding:6px 10px;border-bottom:1px solid #333;color:#ff6600;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
-.section-body{padding:10px}
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
-.kpi{background:#0a0a0a;border:1px solid #333;padding:10px;text-align:center}
-.kpi-val{font-size:22px;font-weight:700;color:#fff;margin:4px 0}
-.kpi-lbl{font-size:10px;color:#666;text-transform:uppercase}
-.agent-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #1a1a1a}
-.agent-name{width:80px;font-weight:700;font-size:12px;color:#ff6600}
-.acc-bar{flex:1;height:16px;background:#111;position:relative;border:1px solid #222}
-.acc-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;font-weight:700;color:#000}
-.acc-stat{width:50px;text-align:right;font-size:11px;color:#666}
+body{font-family:'Inter',sans-serif;background:#f8f9fb;color:#1e293b;font-size:14px;line-height:1.6}
+.nav{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.nav-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4f6ef7,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#64748b;text-decoration:none;transition:all 0.15s}
+.nav-links a:hover,.nav-links a.active{background:#f1f5f9;color:#4f6ef7}
+.container{max-width:1000px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-bottom:16px}
+.card-hdr{font-size:15px;font-weight:600;color:#334155;margin-bottom:14px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;text-align:center}
+.kpi-val{font-size:26px;font-weight:700;margin:4px 0}
+.kpi-lbl{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600}
+.agent-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f1f5f9}
+.agent-row:last-child{border:none}
+.agent-name{width:90px;font-weight:600;font-size:13px;color:#4f6ef7}
+.acc-bar{flex:1;height:20px;background:#f1f5f9;border-radius:6px;overflow:hidden}
+.acc-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:600;color:#fff;transition:width 0.4s}
+.acc-stat{width:50px;text-align:right;font-size:12px;color:#94a3b8}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;padding:6px 8px;color:#666;font-size:10px;text-transform:uppercase;border-bottom:1px solid #333}
-td{padding:6px 8px;border-bottom:1px solid #1a1a1a;font-size:12px}
-.green{color:#00cc00}.red{color:#ff3333}.dim{color:#666}
-.no-data{text-align:center;padding:40px;color:#666}
+th{text-align:left;padding:10px 12px;font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;border-bottom:2px solid #f1f5f9}
+td{padding:10px 12px;border-bottom:1px solid #f8f9fb;font-size:13px}
+tr:hover{background:#fafbfd}
+.green{color:#059669}.red{color:#dc2626}
+.no-data{text-align:center;padding:50px;color:#94a3b8}
 @media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<div class="top-bar">
-  <span>PORTFOLIO COUNCIL AI — ACCURACY TRACKER</span>
-  <div><a href="index.html">DASHBOARD</a><a href="portfolio-editor.html">EDITOR</a><a href="history.html">HISTORY</a><a href="dev-status.html">DEV</a></div>
-</div>
-<div class="container" id="app"><div class="no-data">LOADING...</div></div>
-
+<div class="nav"><div class="nav-brand"><div class="nav-icon">P</div> Portfolio Council AI</div><div class="nav-links"><a href="index.html">Dashboard</a><a href="portfolio-editor.html">Editor</a><a href="history.html">History</a><a href="accuracy.html" class="active">Accuracy</a></div></div>
+<div class="container" id="app"><div class="no-data">Loading...</div></div>
 <script>
 async function load(){try{const r=await fetch('./data/accuracy.json?t='+Date.now());if(r.ok)return await r.json();}catch(e){}return null;}
-function ac(p){return p>=70?'#00cc00':p>=50?'#ffcc00':'#ff3333';}
-
+function ac(p){return p>=70?'#059669':p>=50?'#d97706':'#dc2626';}
 function render(data){
-  if(!data){document.getElementById('app').innerHTML='<div class="no-data">NO ACCURACY DATA YET<br><span class="dim">Run analyses and wait for evaluation period.</span></div>';return;}
+  if(!data){document.getElementById('app').innerHTML='<div class="no-data"><div style="font-size:40px;margin-bottom:12px">📈</div><div style="font-size:16px;font-weight:600;color:#334155;margin-bottom:4px">No accuracy data yet</div><div>Run analyses and wait for the evaluation period to see results here.</div></div>';return;}
   const o=data.overall,agents=data.by_agent||{},reports=data.by_report||[];
-  let html=`
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-lbl">Overall Accuracy</div><div class="kpi-val" style="color:${o.accuracy_pct?ac(o.accuracy_pct):'#666'}">${o.accuracy_pct!==null?o.accuracy_pct+'%':'N/A'}</div></div>
-    <div class="kpi"><div class="kpi-lbl">Correct</div><div class="kpi-val green">${o.correct}</div></div>
+  let h=`<div class="kpi-row">
+    <div class="kpi"><div class="kpi-lbl">Overall Accuracy</div><div class="kpi-val" style="color:${o.accuracy_pct!==null?ac(o.accuracy_pct):'#94a3b8'}">${o.accuracy_pct!==null?o.accuracy_pct+'%':'—'}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Correct Picks</div><div class="kpi-val green">${o.correct}</div></div>
     <div class="kpi"><div class="kpi-lbl">Total Picks</div><div class="kpi-val">${o.total}</div></div>
     <div class="kpi"><div class="kpi-lbl">Eval Period</div><div class="kpi-val">${data.eval_days}d</div></div>
   </div>`;
   const names=Object.keys(agents);
-  if(names.length){
-    html+='<div class="section"><div class="section-hdr">Agent Accuracy</div><div class="section-body">';
-    for(const n of names.sort((a,b)=>(agents[b].accuracy_pct||0)-(agents[a].accuracy_pct||0))){
-      const a=agents[n],p=a.accuracy_pct||0;
-      html+=`<div class="agent-row"><span class="agent-name">${n}</span><div class="acc-bar"><div class="acc-fill" style="width:${p}%;background:${ac(p)}">${p}%</div></div><span class="acc-stat">${a.correct}/${a.total}</span></div>`;
-    }
-    html+='</div></div>';
-  }
-  if(reports.length){
-    html+='<div class="section"><div class="section-hdr">Detail by Report</div><div class="section-body"><table><thead><tr><th>Date</th><th>Ticker</th><th>Action</th><th>Return</th><th>Hit</th></tr></thead><tbody>';
-    for(const r of reports)for(const e of r.evaluations||[])
-      html+=`<tr><td>${r.report_date}</td><td style="color:#fff">${e.ticker}</td><td>${e.action}</td><td class="${e.actual_return_pct>=0?'green':'red'}">${e.actual_return_pct>0?'+':''}${e.actual_return_pct}%</td><td>${e.is_correct?'<span class="green">✓</span>':'<span class="red">✗</span>'}</td></tr>`;
-    html+='</tbody></table></div></div>';
-  }
-  document.getElementById('app').innerHTML=html;
+  if(names.length){h+=`<div class="card"><div class="card-hdr">🤖 Agent Accuracy</div>`;for(const n of names.sort((a,b)=>(agents[b].accuracy_pct||0)-(agents[a].accuracy_pct||0))){const a=agents[n],p=a.accuracy_pct||0;h+=`<div class="agent-row"><span class="agent-name">${n}</span><div class="acc-bar"><div class="acc-fill" style="width:${p}%;background:${ac(p)}">${p}%</div></div><span class="acc-stat">${a.correct}/${a.total}</span></div>`;}h+=`</div>`;}
+  if(reports.length){h+=`<div class="card"><div class="card-hdr">📋 Detailed Results</div><table><thead><tr><th>Date</th><th>Ticker</th><th>Action</th><th>Return</th><th>Hit</th></tr></thead><tbody>`;for(const r of reports)for(const e of r.evaluations||[])h+=`<tr><td>${r.report_date}</td><td style="font-weight:600">${e.ticker}</td><td>${e.action}</td><td class="${e.actual_return_pct>=0?'green':'red'}">${e.actual_return_pct>0?'+':''}${e.actual_return_pct}%</td><td>${e.is_correct?'<span class="green">✓ Hit</span>':'<span class="red">✗ Miss</span>'}</td></tr>`;h+=`</tbody></table></div>`;}
+  document.getElementById('app').innerHTML=h;
 }
 load().then(render);
 </script>

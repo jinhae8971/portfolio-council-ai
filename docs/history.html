@@ -3,76 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HISTORY | Portfolio Council AI</title>
+<title>History | Portfolio Council AI</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Consolas,'Courier New',monospace;background:#000;color:#ccc;font-size:13px;line-height:1.5}
-.top-bar{background:#ff6600;color:#000;padding:4px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px}
-.top-bar a{color:#000;text-decoration:none;margin-left:16px;font-weight:400}
-.top-bar a:hover{text-decoration:underline}
-.container{max-width:1100px;margin:0 auto;padding:12px}
-.section{border:1px solid #333;margin-bottom:8px}
-.section-hdr{background:#111;padding:6px 10px;border-bottom:1px solid #333;color:#ff6600;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
-.section-body{padding:10px}
-.chart-wrap{background:#0a0a0a;padding:10px}
+body{font-family:'Inter',sans-serif;background:#f8f9fb;color:#1e293b;font-size:14px;line-height:1.6}
+.nav{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.nav-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4f6ef7,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#64748b;text-decoration:none;transition:all 0.15s}
+.nav-links a:hover,.nav-links a.active{background:#f1f5f9;color:#4f6ef7}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-bottom:16px}
+.card-hdr{font-size:15px;font-weight:600;color:#334155;margin-bottom:14px}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;padding:6px 8px;color:#666;font-size:10px;text-transform:uppercase;border-bottom:1px solid #333;font-weight:700}
-td{padding:6px 8px;border-bottom:1px solid #1a1a1a;font-size:12px}
-tr:hover{background:#111}
-.badge{padding:1px 6px;font-size:10px;font-weight:700;border:1px solid}
-.b-sc{color:#00cc00;border-color:#004400}
-.b-mv{color:#ffcc00;border-color:#444400}
-.b-sd{color:#ff6600;border-color:#442200}
-.b-nc{color:#ff3333;border-color:#440000}
-.green{color:#00cc00}.red{color:#ff3333}.yellow{color:#ffcc00}.dim{color:#666}
-.conf-bar{display:inline-block;width:40px;height:4px;background:#222;vertical-align:middle;margin-left:4px}
-.conf-fill{display:block;height:100%}
-.stance-dots span{margin-right:2px}
-@media(max-width:700px){table{font-size:11px}td,th{padding:4px}}
+th{text-align:left;padding:10px 12px;font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;border-bottom:2px solid #f1f5f9}
+td{padding:10px 12px;border-bottom:1px solid #f8f9fb;font-size:13px}
+tr:hover{background:#fafbfd}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#ecfdf5;color:#059669}.badge-yellow{background:#fffbeb;color:#d97706}.badge-orange{background:#fff7ed;color:#ea580c}.badge-red{background:#fef2f2;color:#dc2626}
+.conf-bar{display:inline-block;width:40px;height:5px;background:#f1f5f9;border-radius:3px;vertical-align:middle;margin-left:4px;overflow:hidden}
+.conf-fill{display:block;height:100%;border-radius:3px}
+.green{color:#059669}.red{color:#dc2626}.yellow{color:#d97706}.dim{color:#94a3b8}
+.stance-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:2px}
 </style>
 </head>
 <body>
-<div class="top-bar">
-  <span>PORTFOLIO COUNCIL AI — ANALYSIS HISTORY</span>
-  <div><a href="index.html">DASHBOARD</a><a href="portfolio-editor.html">EDITOR</a><a href="accuracy.html">ACCURACY</a><a href="dev-status.html">DEV</a></div>
-</div>
+<div class="nav"><div class="nav-brand"><div class="nav-icon">P</div> Portfolio Council AI</div><div class="nav-links"><a href="index.html">Dashboard</a><a href="portfolio-editor.html">Editor</a><a href="history.html" class="active">History</a><a href="accuracy.html">Accuracy</a></div></div>
 <div class="container">
-<div class="section"><div class="section-hdr">Confidence Trend</div><div class="section-body"><div class="chart-wrap"><canvas id="chart" height="100"></canvas></div></div></div>
-<div class="section"><div class="section-hdr">Analysis History</div><div class="section-body" id="tbl"></div></div>
+<div class="card"><div class="card-hdr">📈 Confidence Trend</div><canvas id="chart" height="100"></canvas></div>
+<div class="card"><div class="card-hdr">📅 Analysis History</div><div id="tbl"></div></div>
 </div>
-
 <script>
-const DEMO=[
-  {date:"2026-04-13",consensus:"majority_view",confidence:68,changes:3,risks:3,summary:"NVDA 비중 축소, 현금 확대, 방어적 섹터 추가",stances:{퀀트:"UNDERWEIGHT",매크로:"MAINTAIN",섹터:"UNDERWEIGHT",사이클:"UNDERWEIGHT",크립토:"MAINTAIN",가치투자자:"MAINTAIN"}},
-  {date:"2026-04-06",consensus:"strong_consensus",confidence:75,changes:2,risks:2,summary:"전반적 비중 유지, 삼성전자 소폭 확대",stances:{퀀트:"MAINTAIN",매크로:"OVERWEIGHT",섹터:"MAINTAIN",사이클:"OVERWEIGHT",크립토:"MAINTAIN",가치투자자:"OVERWEIGHT"}},
-  {date:"2026-03-30",consensus:"split_decision",confidence:52,changes:4,risks:4,summary:"의견 분열, 현상 유지 권고",stances:{퀀트:"OVERWEIGHT",매크로:"UNDERWEIGHT",섹터:"MAINTAIN",사이클:"UNDERWEIGHT",크립토:"OVERWEIGHT",가치투자자:"UNDERWEIGHT"}},
-  {date:"2026-03-23",consensus:"majority_view",confidence:72,changes:2,risks:1,summary:"금리 인하 수혜, TLT 확대",stances:{퀀트:"OVERWEIGHT",매크로:"OVERWEIGHT",섹터:"MAINTAIN",사이클:"OVERWEIGHT",크립토:"MAINTAIN",가치투자자:"OVERWEIGHT"}},
-];
-
-async function load(){
-  let h=[...DEMO];
-  try{const ri=await fetch('./data/history_index.json?t='+Date.now());if(ri.ok){const d=await ri.json();if(d.reports&&d.reports.length)h=d.reports;}}catch(e){}
-  try{const r=await fetch('./data/latest_analysis.json?t='+Date.now());if(r.ok){const d=await r.json();const v=d.verdict||{};if(!h.find(x=>x.date===d.date))h.unshift({date:d.date,consensus:v.consensus_type,confidence:v.confidence_score||0,changes:(v.portfolio_changes||[]).length,risks:(v.risk_warnings||[]).length,summary:v.summary||"",stances:v.stance_votes||{}});}}catch(e){}
-  return h.sort((a,b)=>b.date.localeCompare(a.date));
-}
-
-function cBadge(t){const m={strong_consensus:['STRONG','b-sc'],majority_view:['MAJORITY','b-mv'],split_decision:['SPLIT','b-sd'],no_consensus:['NONE','b-nc']};const[l,c]=m[t]||['?','b-nc'];return`<span class="badge ${c}">${l}</span>`;}
-function cColor(s){return s>=70?'#00cc00':s>=50?'#ffcc00':'#ff3333';}
-function sIcon(s){return{STRONG_OVERWEIGHT:'▲▲',OVERWEIGHT:'▲',MAINTAIN:'—',UNDERWEIGHT:'▼',STRONG_UNDERWEIGHT:'▼▼'}[s]||'?';}
-function sColor(s){return s.includes('OVER')?'#00cc00':s==='MAINTAIN'?'#ffcc00':'#ff3333';}
-
+const DEMO=[{date:"2026-04-13",consensus:"majority_view",confidence:68,changes:3,risks:3,summary:"NVDA 축소, 현금 확대, 방어 섹터 추가",stances:{퀀트:"UNDERWEIGHT",매크로:"MAINTAIN",섹터:"UNDERWEIGHT",사이클:"UNDERWEIGHT",크립토:"MAINTAIN",가치투자자:"MAINTAIN"}},{date:"2026-04-06",consensus:"strong_consensus",confidence:75,changes:2,risks:2,summary:"비중 유지, 삼성전자 확대",stances:{퀀트:"MAINTAIN",매크로:"OVERWEIGHT",섹터:"MAINTAIN",사이클:"OVERWEIGHT",크립토:"MAINTAIN",가치투자자:"OVERWEIGHT"}},{date:"2026-03-30",consensus:"split_decision",confidence:52,changes:4,risks:4,summary:"의견 분열, 현상 유지",stances:{퀀트:"OVERWEIGHT",매크로:"UNDERWEIGHT",섹터:"MAINTAIN",사이클:"UNDERWEIGHT",크립토:"OVERWEIGHT",가치투자자:"UNDERWEIGHT"}},{date:"2026-03-23",consensus:"majority_view",confidence:72,changes:2,risks:1,summary:"금리 인하 수혜, TLT 확대",stances:{퀀트:"OVERWEIGHT",매크로:"OVERWEIGHT",섹터:"MAINTAIN",사이클:"OVERWEIGHT",크립토:"MAINTAIN",가치투자자:"OVERWEIGHT"}}];
+async function load(){let h=[...DEMO];try{const r=await fetch('./data/history_index.json?t='+Date.now());if(r.ok){const d=await r.json();if(d.reports&&d.reports.length)h=d.reports;}}catch(e){}try{const r=await fetch('./data/latest_analysis.json?t='+Date.now());if(r.ok){const d=await r.json();const v=d.verdict||{};if(!h.find(x=>x.date===d.date))h.unshift({date:d.date,consensus:v.consensus_type,confidence:v.confidence_score||0,changes:(v.portfolio_changes||[]).length,risks:(v.risk_warnings||[]).length,summary:v.summary||"",stances:v.stance_votes||{}});}}catch(e){}return h.sort((a,b)=>b.date.localeCompare(a.date));}
+function cBadge(t){const m={strong_consensus:['Strong','badge-green'],majority_view:['Majority','badge-yellow'],split_decision:['Split','badge-orange'],no_consensus:['None','badge-red']};const[l,c]=m[t]||['?','badge-red'];return`<span class="badge ${c}">${l}</span>`;}
+function cCol(s){return s>=70?'#059669':s>=50?'#d97706':'#dc2626';}
+function sDot(s){return`<span class="stance-dot" style="background:${s.includes('OVER')?'#059669':s==='MAINTAIN'?'#d97706':'#dc2626'}" title="${s}"></span>`;}
 function render(data){
-  if(data.length>1){
-    new Chart(document.getElementById('chart'),{type:'line',data:{labels:data.map(h=>h.date).reverse(),datasets:[{label:'Confidence %',data:data.map(h=>h.confidence).reverse(),borderColor:'#ff6600',backgroundColor:'#ff660022',fill:true,tension:0.2,pointRadius:4,pointBackgroundColor:data.map(h=>cColor(h.confidence)).reverse()}]},options:{responsive:true,scales:{y:{beginAtZero:true,max:100,ticks:{color:'#666',font:{family:'Consolas'}},grid:{color:'#1a1a1a'}},x:{ticks:{color:'#666',font:{family:'Consolas'}},grid:{color:'#1a1a1a'}}},plugins:{legend:{labels:{color:'#666',font:{family:'Consolas'}}}}}});
-  }
-  let html='<table><thead><tr><th>Date</th><th>Consensus</th><th>Conf</th><th>Chg</th><th>Risk</th><th>Agents</th><th>Summary</th></tr></thead><tbody>';
-  for(const r of data){
-    const dots=Object.entries(r.stances||{}).map(([n,s])=>`<span title="${n}:${s}" style="color:${sColor(s)}">${sIcon(s)}</span>`).join('');
-    html+=`<tr><td style="color:#fff;font-weight:700">${r.date}</td><td>${cBadge(r.consensus)}</td><td><span style="color:${cColor(r.confidence)};font-weight:700">${r.confidence}%</span><span class="conf-bar"><span class="conf-fill" style="width:${r.confidence}%;background:${cColor(r.confidence)}"></span></span></td><td>${r.changes}</td><td class="${r.risks>=3?'red':r.risks>=2?'yellow':'green'}">${r.risks}</td><td class="stance-dots">${dots}</td><td class="dim" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.summary}">${r.summary}</td></tr>`;
-  }
-  html+='</tbody></table>';
-  document.getElementById('tbl').innerHTML=html;
+  if(data.length>1){new Chart(document.getElementById('chart'),{type:'line',data:{labels:data.map(h=>h.date).reverse(),datasets:[{label:'Confidence %',data:data.map(h=>h.confidence).reverse(),borderColor:'#4f6ef7',backgroundColor:'#4f6ef722',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:data.map(h=>cCol(h.confidence)).reverse()}]},options:{responsive:true,scales:{y:{beginAtZero:true,max:100,ticks:{font:{family:'Inter'}},grid:{color:'#f1f5f9'}},x:{ticks:{font:{family:'Inter'}},grid:{color:'#f1f5f9'}}},plugins:{legend:{labels:{font:{family:'Inter'}}}}}});}
+  let html='<table><thead><tr><th>Date</th><th>Consensus</th><th>Confidence</th><th>Changes</th><th>Risks</th><th>Agents</th><th>Summary</th></tr></thead><tbody>';
+  for(const r of data){const dots=Object.entries(r.stances||{}).map(([n,s])=>sDot(s)).join('');html+=`<tr><td style="font-weight:600">${r.date}</td><td>${cBadge(r.consensus)}</td><td><span style="color:${cCol(r.confidence)};font-weight:600">${r.confidence}%</span><span class="conf-bar"><span class="conf-fill" style="width:${r.confidence}%;background:${cCol(r.confidence)}"></span></span></td><td>${r.changes}</td><td class="${r.risks>=3?'red':'yellow'}">${r.risks}</td><td>${dots}</td><td class="dim" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.summary}">${r.summary}</td></tr>`;}
+  html+='</tbody></table>';document.getElementById('tbl').innerHTML=html;
 }
 load().then(render);
 </script>
