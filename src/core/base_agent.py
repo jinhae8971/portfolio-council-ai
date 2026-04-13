@@ -126,12 +126,42 @@ class BaseAgent(ABC):
     # ── 안전한 AgentReport 생성 ────────────────────────────────────
 
     def _build_report(self, data: dict, raw_text: str) -> AgentReport:
-        """파싱된 JSON에서 AgentReport를 안전하게 생성."""
+        """파싱된 JSON에서 AgentReport를 안전하게 생성.
+
+        LLM이 스키마를 완벽히 따르지 않을 수 있으므로,
+        모든 필드를 유연하게 변환한 후 AgentReport를 생성한다.
+        """
         stance_str = data.get("overall_stance", "MAINTAIN").upper()
         try:
             stance = PortfolioStance(stance_str)
         except ValueError:
             stance = PortfolioStance.MAINTAIN
+
+        # cash_recommendation: float, dict, None 모두 처리
+        cash_rec = data.get("cash_recommendation")
+        if isinstance(cash_rec, dict):
+            cash_rec = cash_rec.get("target", cash_rec.get("recommended", None))
+        if cash_rec is not None:
+            try:
+                cash_rec = float(cash_rec)
+            except (TypeError, ValueError):
+                cash_rec = None
+
+        # ticker_recommendations: 필드명 불일치 보정
+        raw_recs = data.get("ticker_recommendations", [])
+        safe_recs = []
+        if isinstance(raw_recs, list):
+            for r in raw_recs:
+                if not isinstance(r, dict):
+                    continue
+                safe_recs.append({
+                    "ticker": r.get("ticker", ""),
+                    "name": r.get("name", r.get("ticker", "")),
+                    "current_weight": r.get("current_weight", r.get("from_weight", 0)),
+                    "recommended_weight": r.get("recommended_weight", r.get("to_weight", 0)),
+                    "stance": r.get("stance", "MAINTAIN"),
+                    "reason": r.get("reason", r.get("action", "")),
+                })
 
         return AgentReport(
             agent_name=self.name,
@@ -141,7 +171,7 @@ class BaseAgent(ABC):
             key_points=data.get("key_points", ["분석 완료"]),
             confidence_score=max(0, min(100, int(data.get("confidence_score", 50)))),
             overall_stance=stance,
-            ticker_recommendations=data.get("ticker_recommendations", []),
-            cash_recommendation=data.get("cash_recommendation"),
+            ticker_recommendations=safe_recs,
+            cash_recommendation=cash_rec,
             evidence=data.get("evidence", []),
         )

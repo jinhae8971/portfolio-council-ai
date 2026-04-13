@@ -140,16 +140,32 @@ class Moderator:
         result_text = self.llm.complete(
             system=MODERATOR_SYSTEM_PROMPT,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=3000,
+            max_tokens=4096,
         )
 
-        # JSON 파싱 (BaseAgent의 파서 재사용)
+        # JSON 파싱 (강화: 잘린 JSON 복구 시도)
         import re
         text = re.sub(r"```(?:json)?\s*", "", result_text)
         text = re.sub(r"```\s*", "", text).strip()
         match = re.search(r"\{[\s\S]*\}", text)
         if match:
-            return json.loads(match.group())
+            try:
+                return json.loads(match.group())
+            except json.JSONDecodeError:
+                # JSON이 잘렸을 가능성 → 닫는 괄호 추가 시도
+                truncated = match.group()
+                for fix in ['"}]}', '"}]', '"]', '"}', '"]}', '"}]}']:
+                    try:
+                        return json.loads(truncated + fix)
+                    except json.JSONDecodeError:
+                        continue
+                # 최후 수단: 유효한 부분까지만 파싱
+                for i in range(len(truncated) - 1, 0, -1):
+                    if truncated[i] == '}':
+                        try:
+                            return json.loads(truncated[:i+1])
+                        except json.JSONDecodeError:
+                            continue
 
         raise ValueError("LLM 응답에서 유효한 JSON을 찾을 수 없음")
 
