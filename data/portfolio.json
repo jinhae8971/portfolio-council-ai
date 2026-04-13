@@ -1,0 +1,29 @@
+{
+  "name": "younggil_portfolio",
+  "updated_at": "2026-04-13",
+  "base_currency": "KRW",
+  "cash_weight": 10,
+  "holdings": [
+    {"ticker": "005930.KS", "name": "삼성전자", "market": "KRX", "weight": 25, "avg_price": 67000, "sector": "Technology"},
+    {"ticker": "AAPL", "name": "Apple Inc.", "market": "NASDAQ", "weight": 15, "avg_price": 195.50, "sector": "Technology"},
+    {"ticker": "NVDA", "name": "NVIDIA Corp.", "market": "NASDAQ", "weight": 15, "avg_price": 850.00, "sector": "Technology"},
+    {"ticker": "GOOGL", "name": "Alphabet Inc.", "market": "NASDAQ", "weight": 10, "avg_price": 160.00, "sector": "Technology"},
+    {"ticker": "BTC", "name": "Bitcoin", "market": "Crypto", "weight": 10, "avg_price": 62000, "sector": "Crypto"},
+    {"ticker": "ETH", "name": "Ethereum", "market": "Crypto", "weight": 5, "avg_price": 3200, "sector": "Crypto"},
+    {"ticker": "TLT", "name": "iShares 20+ Year Treasury Bond ETF", "market": "NASDAQ", "weight": 10, "avg_price": 92.50, "sector": "Bond"}
+  ],
+  "constraints": {
+    "max_single_stock_weight": 30,
+    "max_sector_weight": 50,
+    "max_crypto_weight": 20,
+    "min_cash_weight": 5
+  },
+  "agent_weights": {
+    "퀀트": 1.0,
+    "매크로": 1.0,
+    "섹터": 1.0,
+    "사이클": 1.0,
+    "크립토": 1.0,
+    "가치투자자": 1.0
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "test_portfolio",
+  "updated_at": "2026-04-13",
+  "base_currency": "KRW",
+  "cash_weight": 20,
+  "holdings": [
+    {"ticker": "AAPL", "name": "Apple", "market": "NASDAQ", "weight": 40, "sector": "Technology"},
+    {"ticker": "BTC", "name": "Bitcoin", "market": "Crypto", "weight": 20, "sector": "Crypto"},
+    {"ticker": "TLT", "name": "Treasury Bond ETF", "market": "NASDAQ", "weight": 20, "sector": "Bond"}
+  ],
+  "constraints": {"max_single_stock_weight": 50, "max_sector_weight": 60, "max_crypto_weight": 25, "min_cash_weight": 5}
+}

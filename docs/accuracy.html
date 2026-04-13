@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accuracy Tracker — Portfolio Council AI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f1117;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:16px}
+header{padding:20px 0;border-bottom:1px solid #2a2d3e;margin-bottom:24px}
+h1{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#22c55e,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:20px;margin-bottom:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.kpi{background:#1a1d2e;border:1px solid #2a2d3e;border-radius:12px;padding:16px;text-align:center}
+.kpi-value{font-size:2rem;font-weight:700;margin:4px 0}
+.kpi-label{font-size:0.75rem;color:#94a3b8;text-transform:uppercase}
+.agent-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #2a2d3e}
+.agent-row:last-child{border:none}
+.agent-name{width:100px;font-weight:600;font-size:0.9rem}
+.acc-bar{flex:1;height:24px;background:#2a2d3e;border-radius:6px;overflow:hidden;position:relative}
+.acc-fill{height:100%;border-radius:6px;transition:width 0.5s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.75rem;font-weight:600}
+.section-title{font-size:1rem;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #2a2d3e}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+th{text-align:left;padding:8px;color:#94a3b8;border-bottom:1px solid #2a2d3e}
+td{padding:8px;border-bottom:1px solid #1a1d2e}
+.correct{color:#22c55e}
+.incorrect{color:#ef4444}
+.no-data{text-align:center;padding:40px;color:#94a3b8}
+a{color:#3b82f6;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <header>
+    <h1>📈 Accuracy Tracker</h1>
+    <a href="index.html" style="font-size:0.85rem">← 대시보드로 돌아가기</a>
+  </header>
+  <div class="no-data" id="loading">데이터 로딩 중...</div>
+</div>
+
+<script>
+async function loadData(){
+  try{
+    const r=await fetch('./data/accuracy.json?t='+Date.now());
+    if(r.ok)return await r.json();
+  }catch(e){}
+  return null;
+}
+
+function accColor(pct){
+  if(pct>=70)return'#22c55e';if(pct>=50)return'#eab308';return'#ef4444';
+}
+
+function render(data){
+  if(!data){
+    document.getElementById('loading').innerHTML='<p>아직 적중률 데이터가 없습니다.</p><p style="margin-top:8px;font-size:0.85rem">포트폴리오 분석이 실행되고 일정 기간이 지나면 적중률이 계산됩니다.</p>';
+    return;
+  }
+
+  const o=data.overall;
+  const agents=data.by_agent||{};
+  const reports=data.by_report||[];
+
+  let html=`
+  <header>
+    <h1>📈 Accuracy Tracker</h1>
+    <div style="display:flex;gap:16px;align-items:center;margin-top:4px">
+      <a href="index.html" style="font-size:0.85rem">← 대시보드</a>
+      <span style="font-size:0.75rem;color:#94a3b8">기준: ${data.eval_days}일 | 평가 보고서: ${data.reports_evaluated}개 | 생성: ${new Date(data.generated_at).toLocaleDateString('ko')}</span>
+    </div>
+  </header>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">전체 적중률</div>
+      <div class="kpi-value" style="color:${o.accuracy_pct?accColor(o.accuracy_pct):'#94a3b8'}">${o.accuracy_pct!==null?o.accuracy_pct+'%':'N/A'}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">적중</div>
+      <div class="kpi-value" style="color:#22c55e">${o.correct}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">총 추천</div>
+      <div class="kpi-value">${o.total}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">평가 기간</div>
+      <div class="kpi-value">${data.eval_days}일</div>
+    </div>
+  </div>`;
+
+  // 에이전트별 적중률
+  const agentNames=Object.keys(agents);
+  if(agentNames.length){
+    html+=`<div class="card"><div class="section-title">🤖 에이전트별 적중률</div>`;
+    for(const name of agentNames.sort((a,b)=>(agents[b].accuracy_pct||0)-(agents[a].accuracy_pct||0))){
+      const a=agents[name];
+      const pct=a.accuracy_pct||0;
+      html+=`<div class="agent-row">
+        <span class="agent-name">${name}</span>
+        <div class="acc-bar"><div class="acc-fill" style="width:${pct}%;background:${accColor(pct)}">${pct}%</div></div>
+        <span style="font-size:0.8rem;color:#94a3b8;width:60px;text-align:right">${a.correct}/${a.total}</span>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+
+  // 보고서별 상세
+  if(reports.length){
+    html+=`<div class="card"><div class="section-title">📋 보고서별 상세</div>
+    <table><thead><tr><th>날짜</th><th>종목</th><th>추천</th><th>실제 수익률</th><th>적중</th></tr></thead><tbody>`;
+    for(const r of reports){
+      for(const e of r.evaluations||[]){
+        html+=`<tr>
+          <td>${r.report_date}</td>
+          <td>${e.ticker}</td>
+          <td>${{increase:'📈 확대',reduce:'📉 축소',add_new:'🆕 신규',remove:'❌ 제거'}[e.action]||e.action}</td>
+          <td class="${e.actual_return_pct>=0?'correct':'incorrect'}">${e.actual_return_pct>0?'+':''}${e.actual_return_pct}%</td>
+          <td>${e.is_correct?'<span class="correct">✅</span>':'<span class="incorrect">❌</span>'}</td>
+        </tr>`;
+      }
+    }
+    html+=`</tbody></table></div>`;
+  }
+
+  document.getElementById('app').innerHTML=html;
+}
+
+loadData().then(render);
+</script>
+</body>
+</html>

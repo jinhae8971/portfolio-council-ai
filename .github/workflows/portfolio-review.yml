@@ -1,0 +1,45 @@
+name: Portfolio Review
+
+on:
+  push:
+    paths: ['data/portfolio.json']
+  schedule:
+    - cron: '0 23 * * 0'  # 매주 월요일 KST 08:00 (UTC 23:00 일요일)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Run portfolio analysis
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python scripts/run_pipeline.py \
+            --dashboard-url "https://${{ github.repository_owner }}.github.io/portfolio-council-ai/"
+
+      - name: Build history index
+        run: python scripts/build_history_index.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ docs/data/
+          git diff --staged --quiet || git commit -m "🤖 Portfolio review $(date +%Y-%m-%d)"
+          git push

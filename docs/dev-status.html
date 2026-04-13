@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Status — Portfolio Council AI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0b10;--card:#12141f;--card2:#1a1d2e;--border:#222640;--text:#e2e8f0;--muted:#7c8db5;--accent:#6366f1;--green:#22c55e;--yellow:#eab308;--orange:#f97316;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--cyan:#06b6d4}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.6rem;font-weight:800;letter-spacing:-0.02em}
+.header h1 span{background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-links{display:flex;gap:12px;font-size:0.8rem}
+.header-links a{color:var(--blue);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
+.header-links a:hover{border-color:var(--blue)}
+
+/* Version badge */
+.version{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:white;padding:3px 10px;border-radius:12px;font-size:0.7rem;font-weight:700}
+
+/* Stage tracker */
+.stages{display:flex;gap:0;margin-bottom:32px;overflow-x:auto}
+.stage{flex:1;min-width:180px;padding:16px;border:1px solid var(--border);position:relative}
+.stage:first-child{border-radius:10px 0 0 10px}
+.stage:last-child{border-radius:0 10px 10px 0}
+.stage.active{background:var(--card2);border-color:var(--accent)}
+.stage.completed{background:linear-gradient(135deg,#22c55e10,#22c55e05);border-color:#22c55e44}
+.stage.future{opacity:0.5}
+.stage-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px}
+.stage-name{font-weight:700;font-size:0.95rem}
+.stage-status{font-size:0.75rem;margin-top:6px}
+.stage-progress{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.stage-fill{height:100%;border-radius:2px;transition:width 0.5s}
+
+/* KPI row */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.kpi-val{font-size:1.6rem;font-weight:800;margin:4px 0}
+.kpi-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+
+/* Section */
+.section{margin-bottom:32px}
+.section-hdr{font-size:1rem;font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Milestone table */
+.milestone{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.milestone-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer}
+.milestone-hdr:hover{background:var(--card2)}
+.milestone-name{font-weight:600;font-size:0.9rem}
+.milestone-badge{padding:2px 10px;border-radius:12px;font-size:0.7rem;font-weight:600}
+.badge-done{background:#22c55e22;color:var(--green)}
+.badge-active{background:#6366f122;color:var(--accent)}
+.badge-pending{background:#7c8db522;color:var(--muted)}
+.milestone-tasks{padding:0 16px 14px;display:none}
+.milestone.open .milestone-tasks{display:block}
+.task{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:0.85rem;border-bottom:1px solid #1a1d2e}
+.task:last-child{border:none}
+.task-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0}
+.task-check.done{background:var(--green);border-color:var(--green);color:white}
+.task-check.wip{background:var(--accent);border-color:var(--accent);color:white}
+.task-label{flex:1}
+.task-tag{font-size:0.65rem;padding:1px 6px;border-radius:4px;background:var(--border);color:var(--muted)}
+
+/* Layer breakdown */
+.layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.layer{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.layer-name{font-weight:700;font-size:0.85rem;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.layer-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:6px 0}
+.layer-fill{height:100%;border-radius:4px}
+.layer-stat{font-size:0.75rem;color:var(--muted)}
+
+/* Next steps */
+.next-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px}
+.next-card:hover{border-color:var(--accent)}
+.next-priority{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px}
+.priority-high{color:var(--red)}
+.priority-medium{color:var(--yellow)}
+.priority-low{color:var(--green)}
+.next-title{font-weight:600;font-size:0.95rem;margin-bottom:4px}
+.next-desc{font-size:0.8rem;color:var(--muted)}
+.next-impact{font-size:0.7rem;margin-top:6px;padding:4px 8px;background:var(--card2);border-radius:4px;display:inline-block}
+
+/* Charts */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.chart-card h3{font-size:0.85rem;font-weight:600;margin-bottom:12px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}.stages{flex-direction:column}.stage{border-radius:10px!important;margin-bottom:4px}}
+
+/* Timeline */
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;padding-bottom:20px}
+.tl-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--border)}
+.tl-dot.done{background:var(--green);border-color:var(--green)}
+.tl-dot.active{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px #6366f166}
+.tl-date{font-size:0.7rem;color:var(--muted)}
+.tl-text{font-size:0.85rem;margin-top:2px}
+
+footer{text-align:center;padding:24px 0;border-top:1px solid var(--border);margin-top:32px;font-size:0.7rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <div>
+    <h1>🛠️ <span>Portfolio Council AI</span> — Dev Status</h1>
+    <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">멀티에이전트 투자자문 시스템 개발 현황</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="version">v0.1.0-alpha</span>
+    <div class="header-links">
+      <a href="index.html">📊 Dashboard</a>
+      <a href="portfolio-editor.html">📝 Editor</a>
+      <a href="accuracy.html">📈 Accuracy</a>
+    </div>
+  </div>
+</div>
+
+<!-- Stage Tracker -->
+<div class="stages" id="stages"></div>
+
+<!-- KPIs -->
+<div class="kpi-grid" id="kpis"></div>
+
+<!-- Charts -->
+<div class="chart-row">
+  <div class="chart-card"><h3>📊 코드 분포 (Layer별)</h3><canvas id="layerChart"></canvas></div>
+  <div class="chart-card"><h3>🧪 테스트 분포</h3><canvas id="testChart"></canvas></div>
+</div>
+
+<!-- Architecture Layers -->
+<div class="section">
+  <div class="section-hdr">🏗️ Architecture Layers</div>
+  <div class="layers" id="layers"></div>
+</div>
+
+<!-- Milestones -->
+<div class="section">
+  <div class="section-hdr">🎯 Milestones</div>
+  <div id="milestones"></div>
+</div>
+
+<!-- Development Timeline -->
+<div class="section">
+  <div class="section-hdr">📅 Development Timeline</div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<!-- Next Steps -->
+<div class="section">
+  <div class="section-hdr">🚀 다음 단계 제안</div>
+  <div id="nextSteps"></div>
+</div>
+
+<footer>
+  Portfolio Council AI — Development Status Dashboard<br>
+  Auto-generated · Last updated: <span id="lastUpdate"></span>
+</footer>
+</div>
+
+<script>
+document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ko-KR');
+
+// ── DATA ──────────────────────────────────────────────────────
+
+const PROJECT = {
+  version: "0.1.0-alpha",
+  startDate: "2026-04-13",
+  stages: [
+    {name:"Stage 1: Personal",status:"active",progress:92,target:"4주",desc:"개인용 시스템 구축",color:"var(--accent)"},
+    {name:"Stage 2: Beta",status:"future",progress:0,target:"2-3개월",desc:"10-100명 베타",color:"var(--blue)"},
+    {name:"Stage 3: Commercial",status:"future",progress:0,target:"4-6개월",desc:"SaaS 상용화",color:"var(--purple)"},
+  ],
+  kpis: [
+    {label:"Python Lines",value:"3,373",color:"var(--blue)"},
+    {label:"HTML Lines",value:"1,306",color:"var(--cyan)"},
+    {label:"Files",value:"99",color:"var(--purple)"},
+    {label:"Tests",value:"32",color:"var(--green)"},
+    {label:"Test Pass",value:"29/29",color:"var(--green)"},
+    {label:"Agents",value:"6",color:"var(--accent)"},
+    {label:"Actions",value:"4",color:"var(--orange)"},
+    {label:"Pages",value:"4",color:"var(--yellow)"},
+  ],
+  layers: [
+    {name:"Core (Domain)",icon:"💎",lines:764,files:6,status:100,color:"var(--green)",desc:"schemas, debate_engine, moderator, consensus"},
+    {name:"Agents",icon:"🤖",lines:800,files:7,status:100,color:"var(--green)",desc:"6에이전트 모두 상세화 완료 (각 125-164줄, 전문 데이터 추출 헬퍼 포함)"},
+    {name:"Infrastructure",icon:"⚙️",lines:741,files:15,status:95,color:"var(--green)",desc:"LLM, Data(3종), Storage, Notification, Cache"},
+    {name:"Application",icon:"🔧",lines:175,files:3,status:90,color:"var(--green)",desc:"DI config, PortfolioService"},
+    {name:"Prompts",icon:"📝",lines:231,files:7,status:100,color:"var(--green)",desc:"6에이전트 + moderator 프롬프트"},
+    {name:"Tests",icon:"🧪",lines:561,files:7,status:80,color:"var(--green)",desc:"unit(28) + integration(4)"},
+    {name:"Dashboard",icon:"🖥️",lines:941,files:4,status:90,color:"var(--green)",desc:"main, editor, accuracy, dev-status"},
+    {name:"Actions",icon:"⚡",lines:0,files:4,status:100,color:"var(--green)",desc:"daily-data, review, deploy, accuracy"},
+  ],
+  milestones: [
+    {name:"Phase 0: Skeleton",status:"done",tasks:[
+      {text:"프로젝트 디렉토리 구조 생성",done:true,tag:"infra"},
+      {text:"4-Layer Architecture 적용",done:true,tag:"arch"},
+      {text:"인터페이스 추상화 (LLMProvider, DataFetcher, Storage)",done:true,tag:"core"},
+      {text:"Pydantic 스키마 정의",done:true,tag:"core"},
+      {text:"pyproject.toml + .gitignore + .env.example",done:true,tag:"config"},
+    ]},
+    {name:"Phase 1: Data Layer",status:"done",tasks:[
+      {text:"MarketDataFetcher (yfinance + PyKRX)",done:true,tag:"data"},
+      {text:"FREDMacroFetcher (금리, 경제지표)",done:true,tag:"data"},
+      {text:"CoinGeckoCryptoFetcher",done:true,tag:"data"},
+      {text:"CachedDataFetcher (stale fallback)",done:true,tag:"data"},
+      {text:"데이터 API 에러 복원력",done:true,tag:"resilience"},
+    ]},
+    {name:"Phase 2: Agent Core",status:"done",tasks:[
+      {text:"BaseAgent ABC + JSON 파싱 강화",done:true,tag:"core"},
+      {text:"6개 에이전트 구현 (analyze + critique)",done:true,tag:"agent"},
+      {text:"6개 시스템 프롬프트 (상세 프레임워크)",done:true,tag:"prompt"},
+      {text:"CRITIQUE_PAIRS 교차 반론 페어링",done:true,tag:"core"},
+      {text:"DebateEngine (Phase 1+2)",done:true,tag:"core"},
+      {text:"Moderator 하이브리드 판단",done:true,tag:"core"},
+      {text:"합의 도출 알고리즘 (5단계 stance)",done:true,tag:"core"},
+    ]},
+    {name:"Phase 3: Dashboard",status:"done",tasks:[
+      {text:"메인 대시보드 (다크모드, Chart.js)",done:true,tag:"ui"},
+      {text:"포트폴리오 편집기 UI",done:true,tag:"ui"},
+      {text:"적중률 추적 페이지",done:true,tag:"ui"},
+      {text:"개발 현황 페이지",done:true,tag:"ui"},
+    ]},
+    {name:"Phase 4: Automation",status:"done",tasks:[
+      {text:"portfolio-review.yml (분석 실행)",done:true,tag:"cicd"},
+      {text:"daily-data.yml (데이터 수집)",done:true,tag:"cicd"},
+      {text:"deploy-dashboard.yml (Pages 배포)",done:true,tag:"cicd"},
+      {text:"accuracy-check.yml (적중률)",done:true,tag:"cicd"},
+      {text:"Telegram 알림 모듈",done:true,tag:"notify"},
+    ]},
+    {name:"Phase 5: Quality",status:"active",tasks:[
+      {text:"Unit 테스트 28개",done:true,tag:"test"},
+      {text:"E2E 통합 테스트 4개",done:true,tag:"test"},
+      {text:"Python 문법 검증 (46파일 통과)",done:true,tag:"qa"},
+      {text:"Import 체인 검증 통과",done:true,tag:"qa"},
+      {text:"README.md",done:true,tag:"docs"},
+      {text:"5개 에이전트 코드 상세화 (125-164줄, 전문 데이터 추출 포함)",done:true,tag:"agent"},
+      {text:"E2E 테스트에 실제 에이전트 포함",done:false,tag:"test"},
+      {text:"에러 시나리오 테스트 확장",done:false,tag:"test"},
+    ]},
+    {name:"Phase 6: 배포 & 실행",status:"pending",tasks:[
+      {text:"GitHub Private 레포 생성 + push",done:false,tag:"deploy"},
+      {text:".env 설정 (ANTHROPIC_API_KEY)",done:false,tag:"config"},
+      {text:"첫 실제 분석 실행 테스트",done:false,tag:"e2e"},
+      {text:"GitHub Pages 활성화",done:false,tag:"deploy"},
+      {text:"GitHub Actions Secrets 설정",done:false,tag:"config"},
+      {text:"Telegram Bot 연동 테스트",done:false,tag:"notify"},
+    ]},
+  ],
+  timeline: [
+    {date:"2026-04-13 AM",text:"프로젝트 구상 및 설계 문서 v1.0 작성",done:true},
+    {date:"2026-04-13 AM",text:"1차 검토 (기능 개선 10항목)",done:true},
+    {date:"2026-04-13 AM",text:"상용화 검토 (아키텍처 진화 전략)",done:true},
+    {date:"2026-04-13 PM",text:"Stage 1 전체 코드 구현 (62파일, 2,573줄)",done:true},
+    {date:"2026-04-13 PM",text:"프롬프트 고도화 + 테스트 28개 + 적중률 모듈",done:true},
+    {date:"2026-04-13 PM",text:"GitHub Actions 4개 + 대시보드 3페이지 + E2E 테스트",done:true},
+    {date:"2026-04-13 PM",text:"설계 문서 v2.0 통합 (1,239줄)",done:true},
+    {date:"2026-04-13 PM",text:"개발 현황 대시보드 + 코드 검증",done:true},
+    {date:"2026-04-13 PM",text:"5개 에이전트 상세화 (23줄→125-164줄, 전문 데이터 추출 헬퍼)",done:true},
+    {date:"2026-04-13 PM",text:"dev-status 현황 업데이트 + 다음 제안 갱신",status:"active"},
+    {date:"다음",text:"GitHub 레포 생성 + 첫 실제 실행 (PC 필요)",done:false},
+    {date:"다음",text:"실제 API 응답 기반 프롬프트 튜닝",done:false},
+  ],
+  nextSteps: [
+    {priority:"high",title:"GitHub 레포 생성 + 첫 실행 테스트",desc:"PC 접근 시 gh repo create → .env 설정 → python scripts/run_pipeline.py 실행하여 실제 API 연동 검증",impact:"실제 동작 검증 — 이것만 하면 Stage 1 완성"},
+    {priority:"high",title:"첫 실행 후 프롬프트 튜닝",desc:"실제 Claude API 응답을 보고 각 에이전트 프롬프트의 JSON 출력 안정성, 분석 깊이를 미세 조정",impact:"분석 품질 실전 검증"},
+    {priority:"medium",title:"프롬프트 A/B 테스트 프레임워크",desc:"동일 데이터에 프롬프트 변형을 적용해 분석 품질을 비교하는 도구. 프롬프트 최적화의 기반",impact:"장기 품질 개선"},
+    {priority:"medium",title:"Rate Limiter 유틸리티",desc:"데이터 API 호출 간격을 제어하는 공용 rate limiter. CoinGecko 30/min, Alpha Vantage 25/day",impact:"API 안정성"},
+    {priority:"medium",title:"에이전트 가중치 커스터마이징",desc:"사용자가 각 에이전트의 투표 가중치를 조정할 수 있는 설정. 예: 퀀트 가중치 1.5x",impact:"개인화"},
+    {priority:"low",title:"다국어 지원 준비",desc:"면책조항/UI 텍스트를 i18n 구조로 변경. 상용화 시 글로벌 시장 대비",impact:"상용화 준비"},
+    {priority:"low",title:"Stage 2 (Supabase + Vercel) 마이그레이션 설계",desc:"멀티유저 지원을 위한 DB 스키마, Auth 플로우, API 엔드포인트 설계",impact:"상용화 기반"},
+  ],
+};
+
+// ── RENDER ─────────────────────────────────────────────────────
+
+// Stages
+document.getElementById('stages').innerHTML = PROJECT.stages.map(s=>`
+  <div class="stage ${s.status}">
+    <div class="stage-label">${s.target}</div>
+    <div class="stage-name">${s.name}</div>
+    <div class="stage-status" style="color:${s.status==='active'?'var(--accent)':s.status==='completed'?'var(--green)':'var(--muted)'}">${s.desc}</div>
+    <div class="stage-progress"><div class="stage-fill" style="width:${s.progress}%;background:${s.color}"></div></div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:4px">${s.progress}%</div>
+  </div>
+`).join('');
+
+// KPIs
+document.getElementById('kpis').innerHTML = PROJECT.kpis.map(k=>`
+  <div class="kpi"><div class="kpi-lbl">${k.label}</div><div class="kpi-val" style="color:${k.color}">${k.value}</div></div>
+`).join('');
+
+// Layers
+document.getElementById('layers').innerHTML = PROJECT.layers.map(l=>`
+  <div class="layer">
+    <div class="layer-name">${l.icon} ${l.name}</div>
+    <div class="layer-bar"><div class="layer-fill" style="width:${l.status}%;background:${l.color}"></div></div>
+    <div class="layer-stat">${l.lines}줄 · ${l.files}파일 · ${l.status}% 완성</div>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:4px">${l.desc}</div>
+  </div>
+`).join('');
+
+// Milestones
+document.getElementById('milestones').innerHTML = PROJECT.milestones.map((m,mi)=>{
+  const doneCount = m.tasks.filter(t=>t.done).length;
+  const total = m.tasks.length;
+  const pct = Math.round(doneCount/total*100);
+  const badgeCls = m.status==='done'?'badge-done':m.status==='active'?'badge-active':'badge-pending';
+  const statusLabel = m.status==='done'?'✅ Complete':m.status==='active'?'🔄 In Progress':'⏳ Pending';
+  return `<div class="milestone ${mi===0?'open':''}" onclick="this.classList.toggle('open')">
+    <div class="milestone-hdr">
+      <span class="milestone-name">${m.name}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:0.75rem;color:var(--muted)">${doneCount}/${total} (${pct}%)</span>
+        <span class="milestone-badge ${badgeCls}">${statusLabel}</span>
+      </div>
+    </div>
+    <div class="milestone-tasks">${m.tasks.map(t=>`
+      <div class="task">
+        <div class="task-check ${t.done?'done':m.status==='active'&&!t.done?'wip':''}">${t.done?'✓':''}</div>
+        <span class="task-label">${t.text}</span>
+        <span class="task-tag">${t.tag}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}).join('');
+
+// Timeline
+document.getElementById('timeline').innerHTML = PROJECT.timeline.map(t=>`
+  <div class="tl-item">
+    <div class="tl-dot ${t.done?'done':t.status==='active'?'active':''}"></div>
+    <div class="tl-date">${t.date}</div>
+    <div class="tl-text">${t.text}</div>
+  </div>
+`).join('');
+
+// Next Steps
+document.getElementById('nextSteps').innerHTML = PROJECT.nextSteps.map(n=>`
+  <div class="next-card">
+    <div class="next-priority priority-${n.priority}">${n.priority} priority</div>
+    <div class="next-title">${n.title}</div>
+    <div class="next-desc">${n.desc}</div>
+    <div class="next-impact">💡 Impact: ${n.impact}</div>
+  </div>
+`).join('');
+
+// Charts
+const layerData = PROJECT.layers.filter(l=>l.lines>0);
+new Chart(document.getElementById('layerChart'),{type:'doughnut',data:{labels:layerData.map(l=>l.name),datasets:[{data:layerData.map(l=>l.lines),backgroundColor:['#22c55e','#eab308','#3b82f6','#a855f7','#f97316','#06b6d4','#ec4899'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:10},padding:8}}}}});
+
+const testData = [
+  {name:'Consensus',count:7},{name:'DebateEngine',count:7},{name:'JSON Parser',count:5},
+  {name:'Moderator',count:4},{name:'Schemas',count:5},{name:'E2E',count:4}
+];
+new Chart(document.getElementById('testChart'),{type:'bar',data:{labels:testData.map(t=>t.name),datasets:[{label:'Tests',data:testData.map(t=>t.count),backgroundColor:'#6366f1',borderRadius:4}]},options:{responsive:true,scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'}},x:{ticks:{color:'#94a3b8',font:{size:10}}}},plugins:{legend:{display:false}}}});
+</script>
+</body>
+</html>

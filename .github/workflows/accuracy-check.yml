@@ -1,0 +1,36 @@
+name: Accuracy Check
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # 매주 월요일 KST 09:00 (UTC 00:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-accuracy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Calculate accuracy (7-day)
+        run: python scripts/calculate_accuracy.py --days 7
+
+      - name: Calculate accuracy (30-day)
+        run: python scripts/calculate_accuracy.py --days 30
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/accuracy.json
+          git diff --staged --quiet || git commit -m "📊 Accuracy check $(date +%Y-%m-%d)"
+          git push

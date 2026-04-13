@@ -1,0 +1,73 @@
+name: Daily Market Data
+
+on:
+  schedule:
+    - cron: '0 1 * * 1-5'  # 평일 KST 10:00 (UTC 01:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Fetch market data
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          python -c "
+          import json, sys
+          sys.path.insert(0, '.')
+          from src.infrastructure.data.market_fetcher import MarketDataFetcher
+          from src.infrastructure.data.macro_fetcher import FREDMacroFetcher
+          from src.infrastructure.data.crypto_fetcher import CoinGeckoCryptoFetcher
+          from pathlib import Path
+          from datetime import datetime
+
+          portfolio = json.loads(Path('data/portfolio.json').read_text())
+          tickers = [h['ticker'] for h in portfolio.get('holdings', []) if h.get('market') != 'Crypto']
+          crypto_tickers = [h['ticker'] for h in portfolio.get('holdings', []) if h.get('market') == 'Crypto']
+
+          data = {'collected_at': datetime.now().isoformat()}
+
+          if tickers:
+              try:
+                  data['stocks'] = MarketDataFetcher().fetch(tickers).get('stocks', {})
+              except Exception as e:
+                  data['stocks'] = {'error': str(e)}
+
+          try:
+              data['macro'] = FREDMacroFetcher().fetch()
+          except Exception as e:
+              data['macro'] = {'error': str(e)}
+
+          if crypto_tickers:
+              try:
+                  data['crypto'] = CoinGeckoCryptoFetcher().fetch(crypto_tickers)
+              except Exception as e:
+                  data['crypto'] = {'error': str(e)}
+
+          Path('data/cache').mkdir(parents=True, exist_ok=True)
+          Path('data/cache/latest_market_data.json').write_text(
+              json.dumps(data, ensure_ascii=False, indent=2, default=str)
+          )
+          print(f'✅ 데이터 수집 완료: stocks={len(data.get(\"stocks\", {}))}, crypto={len(data.get(\"crypto\", {}).get(\"coins\", {}))}')
+          "
+
+      - name: Commit data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cache/
+          git diff --staged --quiet || git commit -m "📊 Daily market data $(date +%Y-%m-%d)"
+          git push
