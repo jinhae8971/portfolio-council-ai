@@ -7,6 +7,17 @@ Usage:
     python scripts/run_pipeline.py --no-notify              # 알림 없이 실행
 """
 
+# === anthropic_usage_reporter (auto-injected) ===
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
+try:
+    from anthropic_usage_reporter import patch_anthropic_client
+    patch_anthropic_client(workflow="portfolio-council-ai")
+except Exception:
+    pass
+# === end auto-injection ===
+
 import argparse
 import json
 import logging
